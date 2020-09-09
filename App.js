@@ -4,14 +4,23 @@ import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {tab} from './src/constant';
+import MyTabBar from './src/components/Mytab';
 
 const Tab = createBottomTabNavigator();
-const App = () => {
+
+const App = (props) => {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator
+    
+        tabBar={(props) => <MyTabBar {...props} />}>
         {tab.map((item) => (
-          <Tab.Screen key={item.name} name={item.name} component={item.component} />
+          <Tab.Screen
+            key={item.name}
+            name={item.name}
+            component={item.component}
+            options={item.options}
+          />
         ))}
       </Tab.Navigator>
     </NavigationContainer>
@@ -20,4 +29,3 @@ const App = () => {
 
 export default App;
 
-const styles = StyleSheet.create({});

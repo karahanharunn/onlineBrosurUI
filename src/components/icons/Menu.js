@@ -4,11 +4,11 @@ import Svg, {Path} from 'react-native-svg';
 function SvgMenu(props) {
   return (
     <Svg
-      width="24"
-      height="24"
+      width={props.size ?? 20}
+      height={props.size ?? 20}
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
+      stroke={props.color}
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"

@@ -1,4 +1,21 @@
-export { default as Bookmark } from './Bookmark'
-export { default as Home } from './Home'
-export { default as Menu } from './Menu'
-export { default as Settings } from './Settings'
+import React from 'react';
+import {default as Home} from './Home';
+import {default as Menu} from './Menu';
+import {default as Settings} from './Settings';
+import {default as Bookmark} from './Bookmark';
+import {View, Text} from 'react-native';
+
+export default function Index(props) {
+  let {id, color, size} = props;
+
+  switch (id) {
+    case 'Home':
+      return <Home color={color} size={size} />;
+    case 'Menu':
+      return <Menu color={color} size={size} />;
+    case 'List':
+      return <Bookmark color={color} size={size} />;
+    case 'Settings':
+      return <Settings color={color} size={size} />;
+  }
+}
