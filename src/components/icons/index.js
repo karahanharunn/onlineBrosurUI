@@ -3,6 +3,7 @@ import {default as Home} from './Home';
 import {default as Menu} from './Menu';
 import {default as Settings} from './Settings';
 import {default as Bookmark} from './Bookmark';
+import {default as Search} from './Search';
 import {View, Text} from 'react-native';
 
 export default function Index(props) {
@@ -17,5 +18,7 @@ export default function Index(props) {
       return <Bookmark color={color} size={size} />;
     case 'Settings':
       return <Settings color={color} size={size} />;
+    case 'Search':
+      return <Search color={color} size={size} />;
   }
 }

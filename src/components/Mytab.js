@@ -42,12 +42,12 @@ export default function MyTabBar({state, descriptors, navigation}) {
 
         return (
           <TouchableOpacity
-            style={[styles.button, isFocused && styles.buttonOrange]}
+            style={[styles.button]}
             onPress={onPress}>
             <Index
               id={icon}
-              color={isFocused ? 'white' : '#afafaf'}
-              size={isFocused ? 26 : 20}
+              color={isFocused ? 'orange' : '#afafaf'}
+              size={isFocused ? 24 : 20}
             />
           
           </TouchableOpacity>
@@ -64,8 +64,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     fontSize: 14,
+    backgroundColor:'white',
   },
-  buttonOrange: {backgroundColor: 'orange', borderRadius: 50},
+  buttonOrange: {backgroundColor: 'orange',},
 
   view: {
     flexDirection: 'row',
@@ -73,14 +74,12 @@ const styles = StyleSheet.create({
     borderWidth: 0.1,
     borderStyle: 'solid',
     borderRadius: 5,
-    backgroundColor: 'white',
     padding: 1,
   },
   viewSub: {
     backgroundColor: 'orange',
     width: 3,
     height: 3,
-    borderRadius: 50,
   },
   white: {
     backgroundColor: 'white',
