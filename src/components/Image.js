@@ -6,6 +6,7 @@ export default function ImageComponent({data}) {
     <FlatList
       style={styles.flatList}
       data={data}
+      showsHorizontalScrollIndicator={false}
       horizontal={true}
       keyExtractor={(item) => item.id}
       renderItem={({item}) => (
@@ -49,6 +50,5 @@ const styles = StyleSheet.create({
   },
   flatList: {
     marginLeft: '6%',
-    flexGrow: 0,
   },
 });

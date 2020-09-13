@@ -1,28 +1,19 @@
 import React from 'react';
-import {View, Text, StyleSheet, FlatList, Button} from 'react-native';
+import {Easing, View, Text, StyleSheet, FlatList, Button} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import CategoryDetail from '../components/CategoryDetail';
 import BrandDetail from '../components/BrandDetail';
 import {HeaderBackButton} from '@react-navigation/stack';
 import Search from '../components/Search';
 import Card from '../components/Card';
-import SvgDelete from '../components/icons/Delete';
-import {default as Chevron} from '../components/icons/Chevron';
 import ButtonGroup from '../components/Button';
 import Progress from '../components/Progress';
 import Info from '../components/info';
 import ImageComponent from '../components/Image';
-const data = [
-  {name: 'Fast Food', icon: <Chevron />, count: '136 Places'},
-  {name: 'Fast Food2', icon: <SvgDelete />, count: '256 Places'},
-  {name: 'Fast Food3', icon: <SvgDelete />, count: '10 Places'},
-  {name: 'Fast Food4', icon: <SvgDelete />, count: '248 Places'},
-  {name: 'Fast Food4', icon: <SvgDelete />, count: '248 Places'},
-  {name: 'Fast Food4', icon: <SvgDelete />, count: '248 Places'},
-  {name: 'Fast Food4', icon: <SvgDelete />, count: '248 Places'},
-  {name: 'Fast Food4', icon: <SvgDelete />, count: '248 Places'},
-  {name: 'Fast Food4', icon: <SvgDelete />, count: '248 Places'},
-];
+import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
+
+import {useSelector} from 'react-redux';
+
 const Images = [
   {
     imageUrl:
@@ -53,52 +44,79 @@ const Images = [
     count: '248 Places',
   },
 ];
-function HomePage() {
+function HomePage(props) {
+  const state = useSelector((state) => state.title);
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
       <Search />
       <Info title="Popüler Markalar" category="h1" buttonName="Show All" />
       <View style={styles.listView}>
-        <Card data={data} />
+        <Card {...props} />
       </View>
       <ButtonGroup />
       <Progress />
       <Info title="Kategoriler" category="h2" buttonName="Show All" />
       <View style={styles.listView}>
-        <ImageComponent data={Images} />
+        <ImageComponent {...props} data={Images} />
+      </View>
+      <Info title="Çok Satanlar" category="h2" buttonName="Show All" />
+      <View style={styles.listView}>
+        <ImageComponent {...props} data={Images} />
       </View>
     </View>
   );
 }
+const HomeStack = createSharedElementStackNavigator();
 
-const HomeStack = createStackNavigator();
-
-export default function HomeStackScreen() {
+export default function HomeStackScreen({navigation}) {
   return (
     <HomeStack.Navigator
+      initialRouteName="Anasayfa"
+      headerMode="none"
       screenOptions={{
         headerTitleStyle: {
           alignSelf: 'center',
-          marginRight: '10%',
           fontSize: 12,
         },
       }}>
+      <HomeStack.Screen name="Anasayfa" component={HomePage} />
       <HomeStack.Screen
-        name="Bakery(36 places)"
-        component={HomePage}
+        name="Category"
+        component={CategoryDetail}
+        sharedElementsConfig={(route, otherRoute, showing) => {
+          const {data} = route.params;
+          return data.map((item) => `item ${item.id} icon`);
+        }}
         options={{
+          gestureEnabled: false,
+          transitionSpec: {
+            open: {
+              animation: 'timing',
+              config: {duration: 500, easing: Easing.inOut(Easing.ease)},
+            },
+            close: {
+              animation: 'timing',
+              config: {duration: 500, easing: Easing.inOut(Easing.ease)},
+            },
+          },
+          cardStyleInterpolator: ({current: {progress}}) => {
+            return {
+              cardStyle: {
+                opacity: progress,
+              },
+            };
+          },
           headerLeft: (props) => (
             <HeaderBackButton
               style={{width: 15, height: 15}}
               {...props}
               onPress={() => {
-                // Do something
+                navigation.goBack();
               }}
             />
           ),
         }}
       />
-      <HomeStack.Screen name="Category" component={CategoryDetail} />
       <HomeStack.Screen name="Brand" component={BrandDetail} />
     </HomeStack.Navigator>
   );
@@ -107,5 +125,6 @@ const styles = StyleSheet.create({
   listView: {
     display: 'flex',
     width: '100%',
+    flex: 1,
   },
 });

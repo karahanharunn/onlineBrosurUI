@@ -9,21 +9,26 @@
     "test": "jest",
     "lint": "eslint .",
     "pod": "npx pod-install ios",
-    "svgr": "npx @svgr/cli ./src/icons/delete.svg -d ./src/components/icons --native --icon --svg-props width=20,height=20"
+    "svgr": "npx @svgr/cli ./src/icons/back.svg -d ./src/components/icons --native --icon --svg-props width=20,height=20"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/bottom-tabs": "^5.8.0",
     "@react-navigation/drawer": "^5.9.0",
-    "@react-navigation/native": "^5.7.3",
-    "@react-navigation/stack": "^5.9.0",
+    "@react-navigation/native": "^5.0.9",
+    "@react-navigation/stack": "^5.1.1",
     "react": "16.13.1",
     "react-native": "0.63.2",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-reanimated": "^1.13.0",
     "react-native-safe-area-context": "^3.1.7",
     "react-native-screens": "^2.10.1",
+    "react-native-shared-element": "^0.7.0",
     "react-native-svg": "^12.1.0",
+    "react-navigation-shared-element": "^5.0.0-alpha1",
+    "react-redux": "^7.2.1",
+    "react-timer-mixin": "^0.13.4",
+    "redux": "^4.0.5",
     "styled-components": "^5.2.0"
   },
   "devDependencies": {

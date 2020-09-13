@@ -1,28 +1,137 @@
-import React from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import React, {useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+  Image,
+} from 'react-native';
 import SvgDelete from './icons/Delete';
-
-export default function Card({data}) {
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {SharedElement} from 'react-navigation-shared-element';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const cardWith = 80;
+const cardHeight = 80;
+const Spacing = 6;
+const data = [
+  {
+    name: 'Fast Food',
+    imageUrl:
+      'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
+    count: '136 Places',
+    id: 1,
+  },
+  {
+    name: 'Fast Food2',
+    imageUrl:
+      'https://i.pinimg.com/originals/f2/de/b3/f2deb32dc6cd0bcc8eb417f97e4b2540.png',
+    count: '256 Places',
+    id: 2,
+  },
+  {
+    name: 'Fast Food3',
+    imageUrl:
+      'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
+    count: '10 Places',
+    id: 3,
+  },
+  {
+    name: 'Fast Food4',
+    imageUrl:
+      'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
+    count: '248 Places',
+    id: 4,
+  },
+  {
+    name: 'Fast Food4',
+    imageUrl:
+      'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
+    count: '248 Places',
+    id: 5,
+  },
+  {
+    name: 'Fast Food4',
+    imageUrl:
+      'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
+    count: '248 Places',
+    id: 6,
+  },
+  {
+    name: 'Fast Food4',
+    imageUrl:
+      'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
+    count: '248 Places',
+    id: 7,
+  },
+  {
+    name: 'Fast Food4',
+    imageUrl:
+      'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
+    count: '248 Places',
+    id: 8,
+  },
+  {
+    name: 'Fast Food4',
+    imageUrl:
+      'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
+    count: '248 Places',
+    id: 9,
+  },
+];
+export default function Card({navigation, selectedId, isMaster}) {
   return (
     <FlatList
       style={styles.flatList}
       data={data}
-      horizontal={true}
+      horizontal
+      showsHorizontalScrollIndicator={false}
       keyExtractor={(item) => item.id}
+      snapToAlignment="start"
+      snapToInterval={cardWith + Spacing}
       renderItem={({item}) => (
-        <View style={styles.parentView}>
-          <View style={styles.subView}>{item.icon}</View>
-          <Text style={styles.title}>{item.name}</Text>
-          <Text style={styles.subTitle}>{item.count}</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('Category', {
+              data: data,
+              selectedId: item.id,
+              item,
+            })
+          }>
+          <View style={[styles.parentView]}>
+            <SharedElement id={`item ${item.id} icon`}>
+              <View style={styles.subView}>
+                <Image
+                  style={styles.tinyLogo}
+                  source={{
+                    uri: item.imageUrl,
+                  }}
+                />
+              </View>
+            </SharedElement>
+            <Text
+              style={[
+                styles.title,
+                ,
+                selectedId === item.id && styles.redColor,
+              ]}>
+              {item.name}
+            </Text>
+            <Text style={styles.subTitle}>{item.count}</Text>
+          </View>
+        </TouchableOpacity>
       )}
     />
   );
 }
 const styles = StyleSheet.create({
   parentView: {
-    marginTop: 18,
-    marginRight: 18,
+    marginTop: cardHeight / 4,
+    marginRight: cardWith / 4,
+    width: cardWith * 1.25,
+    height: cardHeight * 2,
+    justifyContent: 'flex-end',
   },
   title: {
     fontSize: 17,
@@ -34,19 +143,23 @@ const styles = StyleSheet.create({
     color: 'gray',
     fontSize: 12,
   },
+  redColor: {
+    color: 'red',
+  },
+  tinyLogo: {
+    width: '100%',
+    height: '100%',
+  },
   subView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: 'rgba(28,110,164,0.51)',
-    borderStyle: 'dashed',
-    borderWidth: 2.1,
-    borderRadius: 10,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     position: 'relative',
-    width: 100,
-    height: 80,
+    width: cardWith,
+    height: cardHeight,
   },
   flatList: {
-    marginLeft: '6%',
-    flexGrow: 0,
+    marginLeft: cardWith / 4,
+    flex: 1,
+    overflow: 'hidden',
   },
 });
