@@ -16,6 +16,7 @@ export default function ImageComponent({data}) {
             source={{
               uri: item.imageUrl,
             }}
+            resizeMode={"contain"}
           />
           <View style={styles.flex}>
             <Text style={styles.start}>{item.name}</Text>

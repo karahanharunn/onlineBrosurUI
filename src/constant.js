@@ -1,9 +1,8 @@
-
 import React from 'react';
-const {default: HomeStackScreen} = require('./views/HomePage');
-const {default: Menu} = require('./views/Menu');
-const {default: List} = require('./views/List');
-const {default: MyAccount} = require('./views/MyAccount');
+import Menu from './scenes/Menu';
+import List from './scenes/List';
+import MyAccount from './scenes/MyAccount';
+import HomeStackScreen from './scenes/HomePage';
 
 export const tab = [
   {

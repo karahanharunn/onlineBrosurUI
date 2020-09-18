@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Animated,
   ScrollView,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   Dimensions,
 } from 'react-native';
 import Card from './Card';
@@ -23,7 +23,7 @@ export default function CategoryDetail({route, navigation: {goBack}}) {
 
   const selectedItemindex = data.findIndex((i) => i.id === item.id);
   const ref = React.useRef();
-  const [Value, setValue] = React.useState(selectedItemindex);
+  const [Value, setValue] = useState(selectedItemindex);
   const mountedAnimated = React.useRef(new Animated.Value(0)).current;
   const activeIndex = React.useRef(new Animated.Value(Value)).current;
   const animatedIndex = React.useRef(new Animated.Value(Value)).current;
@@ -48,87 +48,115 @@ export default function CategoryDetail({route, navigation: {goBack}}) {
     inputRange: [0, 1],
     outputRange: [50, 0],
   });
-  const size = cardWith * 2;
-  const translateX = activeIndex.interpolate({
+  const size = cardWith + Spacing * 2;
+  const translateX = animatedIndex.interpolate({
     inputRange: [-1, 0, 1],
     outputRange: [size, 0, -size],
   });
+
   return (
     <View style={{flex: 1}}>
-      <SvgBack onPress={() => goBack()} />
-      <Animated.FlatList
-        style={[
-          styles.flatList,
-          {
-            marginLeft: width / 2 - cardWith / 2 - Spacing,
-            transform: [{translateX}],
-          },
-        ]}
-        data={data}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item.id}
-        snapToAlignment="start"
-        snapToInterval={cardWith + Spacing}
-        renderItem={({item, index}) => {
-          const inputRange = [index - 1, index, index + 1];
-          const opacity = activeIndex.interpolate({
-            inputRange,
-            outputRange: [0.1, 1, 0.1],
-            extrapolate: 'clamp',
-          });
-          return (
-            <TouchableOpacity
-              style={{padding: Spacing}}
-              key={item.id}
-              onPress={() => {
-                activeIndex.setValue(index);
-                setValue(index);
-                ref.current.scrollToIndex({
-                  index,
-                  animated: true,
-                });
-              }}>
-              <SharedElement id={`item ${item.id} icon`}>
-                <Animated.View style={[styles.subView, {opacity}]}>
-                  <Image
-                    style={styles.tinyLogo}
-                    source={{
-                      uri: item.imageUrl,
-                    }}
-                  />
-                </Animated.View>
-              </SharedElement>
-              <Text
-                style={[
-                  styles.title,
-                  ,
-                  item.id === activeIndex && styles.redColor,
-                ]}>
-                {item.name}
-              </Text>
-              <Text style={styles.subTitle}>{item.count}</Text>
-            </TouchableOpacity>
-          );
-        }}
-      />
+      <View style={{flex: 1, backgroundColor: 'black'}}>
+        <SvgBack onPress={() => goBack()} />
+        <Animated.FlatList
+          style={[
+            styles.flatList,
+            {
+              marginLeft: width / 2 - cardWith / 2 - Spacing,
+              transform: [{translateX: translateX}],
+            },
+          ]}
+          data={data}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.id}
+          snapToAlignment="start"
+          snapToInterval={cardWith + Spacing}
+          renderItem={({item, index}) => {
+            const inputRange = [index - 1, index, index + 1];
+            const opacity = activeIndex.interpolate({
+              inputRange,
+              outputRange: [0.5, 1, 0.5],
+              extrapolate: 'clamp',
+            });
+            const cardScale = activeIndex.interpolate({
+              inputRange,
+              outputRange: [0.8, 1, 0.8],
+              extrapolate: 'clamp',
+            });
+            const textScale = activeIndex.interpolate({
+              inputRange,
+              outputRange: [0, 1, 0],
+              extrapolate: 'clamp',
+            });
+            return (
+              <TouchableWithoutFeedback
+                key={item.id}
+                onPress={() => {
+                  activeIndex.setValue(index);
+                  setValue(index);
+                  ref.current.scrollToIndex({
+                    index,
+                    animated: true,
+                  });
+                }}>
+                <View
+                  style={{
+                    ...styles.center,
+                    padding: Spacing,
+                    width: 75,
+                  }}>
+                  <SharedElement id={`item ${item.id} icon`}>
+                    <Animated.View style={[styles.subView, {opacity}]}>
+                      <Animated.Image
+                        style={{
+                          ...styles.tinyLogo,
+                          transform: [{scale: cardScale}],
+                        }}
+                        source={{
+                          uri: item.imageUrl,
+                        }}
+                        resizeMode={'contain'}
+                      />
+                    </Animated.View>
+                  </SharedElement>
+                  <Animated.Text
+                    style={[
+                      styles.title,
+                      ,
+                      item.id === activeIndex && styles.redColor,
+                      {transform: [{scale: textScale}]},
+                    ]}>
+                    {item.name}
+                  </Animated.Text>
+                </View>
+              </TouchableWithoutFeedback>
+            );
+          }}
+        />
+      </View>
       <View style={styles.Info}>
         <Animated.FlatList
           style={{opacity: mountedAnimated, transform: [{translateY}]}}
           ref={ref}
           data={data}
+          decelerationRate={0}
           keyExtractor={(item) => item.id}
           horizontal
-          initialScrollIndex={selectedItemindex}
+          disableIntervalMomentum={true}
+          snapToInterval={width}
+          initialScrollIndex={Value}
           nestedScrollEnabled
           getItemLayout={(data, index) => ({
             length: width,
             offset: width * index,
             index,
           })}
+          showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={(ev) => {
             const newIndex = Math.floor(ev.nativeEvent.contentOffset.x / width);
             activeIndex.setValue(newIndex);
+            setValue(newIndex);
           }}
           renderItem={({item}) => {
             return (
@@ -136,8 +164,8 @@ export default function CategoryDetail({route, navigation: {goBack}}) {
                 style={{
                   backgroundColor: 'rgba(0,0,0,0.05)',
                   borderRadius: 16,
-                  width: width - spacingCard * 2,
-                  margin: spacingCard,
+                  width: width - spacingCard,
+                  margin: 12,
                 }}>
                 <View style={{padding: spacingCard}}>
                   <Text style={{fontSize: 16}}>
@@ -153,20 +181,21 @@ export default function CategoryDetail({route, navigation: {goBack}}) {
 }
 export const styles = StyleSheet.create({
   parentView: {
-    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   Info: {
-    flex: 5,
+    flex: 4,
   },
   title: {
     fontSize: 17,
-    marginTop: 5,
+    marginTop: 10,
+    marginRight: 10,
+    width: 120,
     fontWeight: '700',
-    color: '#222831',
+    color: 'white',
   },
-  subTitle: {
-    color: 'gray',
-    fontSize: 12,
+  center: {
+    justifyContent: 'center',
   },
   redColor: {
     color: 'red',
@@ -184,7 +213,7 @@ export const styles = StyleSheet.create({
   flatList: {
     flex: 1,
     overflow: 'hidden',
-    marginTop: 12,
     width: '200%',
+    height: cardHeight * 2,
   },
 });

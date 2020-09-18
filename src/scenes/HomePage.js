@@ -1,6 +1,6 @@
 import React from 'react';
 import {Easing, View, Text, StyleSheet, FlatList, Button} from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import CategoryDetail from '../components/CategoryDetail';
 import BrandDetail from '../components/BrandDetail';
 import {HeaderBackButton} from '@react-navigation/stack';
@@ -10,10 +10,9 @@ import ButtonGroup from '../components/Button';
 import Progress from '../components/Progress';
 import Info from '../components/info';
 import ImageComponent from '../components/Image';
-import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 
 import {useSelector} from 'react-redux';
-
+const HomeStack = createStackNavigator();
 const Images = [
   {
     imageUrl:
@@ -66,7 +65,6 @@ function HomePage(props) {
     </View>
   );
 }
-const HomeStack = createSharedElementStackNavigator();
 
 export default function HomeStackScreen({navigation}) {
   return (
@@ -83,10 +81,6 @@ export default function HomeStackScreen({navigation}) {
       <HomeStack.Screen
         name="Category"
         component={CategoryDetail}
-        sharedElementsConfig={(route, otherRoute, showing) => {
-          const {data} = route.params;
-          return data.map((item) => `item ${item.id} icon`);
-        }}
         options={{
           gestureEnabled: false,
           transitionSpec: {

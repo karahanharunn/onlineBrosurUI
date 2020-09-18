@@ -12,8 +12,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {SharedElement} from 'react-navigation-shared-element';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const cardWith = 80;
-const cardHeight = 80;
+const cardWith = 70;
+const cardHeight = 50;
 const Spacing = 6;
 const data = [
   {
@@ -45,35 +45,35 @@ const data = [
     id: 4,
   },
   {
-    name: 'Fast Food4',
+    name: 'Fast Food5',
     imageUrl:
       'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
     count: '248 Places',
     id: 5,
   },
   {
-    name: 'Fast Food4',
+    name: 'Fast Food6',
     imageUrl:
       'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
     count: '248 Places',
     id: 6,
   },
   {
-    name: 'Fast Food4',
+    name: 'Fast Food7',
     imageUrl:
       'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
     count: '248 Places',
     id: 7,
   },
   {
-    name: 'Fast Food4',
+    name: 'Fast Food8',
     imageUrl:
       'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
     count: '248 Places',
     id: 8,
   },
   {
-    name: 'Fast Food4',
+    name: 'Fast Food9',
     imageUrl:
       'https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_of_B%C4%B0M.PNG',
     count: '248 Places',
@@ -107,6 +107,7 @@ export default function Card({navigation, selectedId, isMaster}) {
                   source={{
                     uri: item.imageUrl,
                   }}
+                  resizeMode={"contain"}
                 />
               </View>
             </SharedElement>
