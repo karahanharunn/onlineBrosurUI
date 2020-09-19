@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import Index from './icons';
 import {default as Delete} from './icons/Delete';
+import { GRAY_MEDIUM } from '../styles/colors';
 
 export default function Search() {
   const [text, onChangeText] = React.useState();
@@ -35,12 +36,12 @@ export default function Search() {
 
   return (
     <View style={styles.searchSection}>
-      <Index id="Search" color="orange" size="20" />
       <TextInput
         style={styles.input}
         placeholder="Search here..."
         onChangeText={(text) => onChangeText(text)}
         value={text}
+        placeholderTextColor={GRAY_MEDIUM}
         onSubmitEditing={Keyboard.dismiss}
       />
       {text && (
@@ -48,6 +49,7 @@ export default function Search() {
           <Delete />
         </TouchableHighlight>
       )}
+      <Index id="Search" color="orange" size="20" />
     </View>
   );
 }
@@ -56,8 +58,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    width: '90%',
+    backgroundColor: 'white',
+    width: '60%',
+    height:35,
+    marginLeft: '10%',
     borderRadius: 10,
     paddingLeft: 12,
     paddingRight: 12,
@@ -66,7 +70,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     color: '#424242',
   },
 });

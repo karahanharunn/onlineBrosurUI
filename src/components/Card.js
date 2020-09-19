@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,12 @@ import {
 import SvgDelete from './icons/Delete';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {SharedElement} from 'react-navigation-shared-element';
+import {GRAY_DARK} from '../styles/colors';
+import {AppService} from '../services/AppService';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const cardWith = 70;
-const cardHeight = 50;
+const cardWith = 40;
+const cardHeight = 40;
 const Spacing = 6;
 const data = [
   {
@@ -81,6 +83,16 @@ const data = [
   },
 ];
 export default function Card({navigation, selectedId, isMaster}) {
+  // const [data, setData] = useState();
+  // useEffect(() => {
+  //   (() => {
+  //     AppService.getBrands().then((response) => {
+  //       setData(response.data);
+  //       debugger;
+  //     });
+  //   })();
+  // }, []);
+  // console.log(data);
   return (
     <FlatList
       style={styles.flatList}
@@ -107,20 +119,13 @@ export default function Card({navigation, selectedId, isMaster}) {
                   source={{
                     uri: item.imageUrl,
                   }}
-                  resizeMode={"contain"}
+                  resizeMode={'contain'}
                 />
               </View>
             </SharedElement>
-            <Text
-              style={[
-                styles.title,
-                ,
-                selectedId === item.id && styles.redColor,
-              ]}>
-              {item.name}
-            </Text>
-            <Text style={styles.subTitle}>{item.count}</Text>
           </View>
+          <Text style={styles.title}>{item.name}</Text>
+          <Text style={styles.subTitle}>{item.count}</Text>
         </TouchableOpacity>
       )}
     />
@@ -130,37 +135,41 @@ const styles = StyleSheet.create({
   parentView: {
     marginTop: cardHeight / 4,
     marginRight: cardWith / 4,
-    width: cardWith * 1.25,
-    height: cardHeight * 2,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-around',
+    borderWidth: 1.5,
+    borderRadius: 8,
+    padding: 12,
+    borderStyle: 'dashed',
+    borderColor: GRAY_DARK,
   },
   title: {
-    fontSize: 17,
+    fontSize: 11,
     marginTop: 5,
-    fontWeight: '700',
+    fontFamily: 'OpenSans-SemiBold',
     color: '#222831',
   },
   subTitle: {
     color: 'gray',
     fontSize: 12,
+    alignItems: 'flex-start',
   },
   redColor: {
     color: 'red',
   },
   tinyLogo: {
-    width: '100%',
-    height: '100%',
-  },
-  subView: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    position: 'relative',
     width: cardWith,
     height: cardHeight,
   },
+  subView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    display: 'flex',
+  },
   flatList: {
-    marginLeft: cardWith / 4,
-    flex: 1,
     overflow: 'hidden',
+    width: '85%',
+    display: 'flex',
+    alignSelf: 'center',
   },
 });

@@ -1,55 +1,36 @@
-import React, {Component} from 'react';
-import {Alert, Button, TextInput, View, StyleSheet, Text} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import React, {useState} from 'react';
+import {View, StyleSheet, Text} from 'react-native';
+import {LOGIN_BACKGROUND} from '../../styles/colors';
+import Button from '../../components/atoms/Button';
+import Login from '../../components/molecules/Login';
+import Register from '../../components/molecules/Register';
 
-export default class index extends Component {
-  constructor(props) {
-    super(props);
+export default function index() {
+  const [page, setPage] = useState(false);
 
-    this.state = {
-      username: '',
-      password: '',
-    };
-  }
-
-  onLogin = () => {
-    const {username, password} = this.state;
-
-    Alert.alert('Credentials', `${username} + ${password}`);
-  };
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <View style={styles.buttonGroup}>
-          <TouchableOpacity style={styles.registerLeft}>
-            <Text style={(styles.buttonText, {color: '#95979A'})}>Login </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.registerRight}>
-            <Text style={styles.buttonText}>Register </Text>
-          </TouchableOpacity>
-        </View>
-        <TextInput
-          placeholderTextColor="#95979A"
-          value={this.state.username}
-          onChangeText={(username) => this.setState({username})}
-          placeholder={'Username'}
-          style={styles.input}
-        />
-        <TextInput
-          placeholderTextColor="#95979A"
-          value={this.state.password}
-          onChangeText={(password) => this.setState({password})}
-          placeholder={'Password'}
-          secureTextEntry={true}
-          style={styles.input}
-        />
-        <TouchableOpacity style={styles.button} onPress={this.onLogin}>
-          <Text style={styles.buttonText}>Login </Text>
-        </TouchableOpacity>
+  return (
+    <View style={styles.container}>
+      <View style={styles.buttonGroup}>
+        <Button style={styles.registerLeft} onPress={() => setPage(true)}>
+          <Text
+            style={
+              (styles.buttonText, {color: page === false ? '#95979A' : 'white'})
+            }>
+            Login
+          </Text>
+        </Button>
+        <Button style={styles.registerRight} onPress={() => setPage(false)}>
+          <Text
+            style={
+              (styles.buttonText, {color: page === true ? '#95979A' : 'white'})
+            }>
+            Register
+          </Text>
+        </Button>
       </View>
-    );
-  }
+      {page === true ? <Login /> : <Register />}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -57,32 +38,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#142548',
+    backgroundColor: LOGIN_BACKGROUND,
   },
-  input: {
-    width: '80%',
-    height: 44,
-    padding: 10,
-    borderWidth: 0.2,
-    color: '#6E7E9F',
-    borderColor: '#6E7E9F',
-    marginBottom: 10,
-    borderRadius: 6,
-  },
-  button: {
-    backgroundColor: '#E41684',
-    width: 200,
-    height: 44,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#E41684',
-    borderRadius: 12,
-    margin: 10,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-  },
+
   buttonGroup: {
     display: 'flex',
     flexDirection: 'row',
@@ -97,7 +55,6 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderColor: '#95979A',
     margin: 10,
-    color: '#95979A',
     paddingRight: 10,
   },
   registerRight: {

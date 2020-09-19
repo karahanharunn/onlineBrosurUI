@@ -1,6 +1,6 @@
 import React from 'react';
 import {Easing, View, Text, StyleSheet, FlatList, Button} from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import CategoryDetail from '../components/CategoryDetail';
 import BrandDetail from '../components/BrandDetail';
 import {HeaderBackButton} from '@react-navigation/stack';
@@ -46,14 +46,14 @@ const Images = [
 function HomePage(props) {
   const state = useSelector((state) => state.title);
   return (
-    <View style={{flex: 1, alignItems: 'center'}}>
-      <Search />
-      <Info title="Popüler Markalar" category="h1" buttonName="Show All" />
-      <View style={styles.listView}>
+    <View style={{flex: 1, alignItems: 'center', overflow: 'visible'}}>
+      {/* <Search/> */}
+      <View style={[styles.listView, styles.marka]}>
+        <Info title="Markalar" category="h1" buttonName="Show All" />
         <Card {...props} />
+        <ButtonGroup />
+        <Progress />
       </View>
-      <ButtonGroup />
-      <Progress />
       <Info title="Kategoriler" category="h2" buttonName="Show All" />
       <View style={styles.listView}>
         <ImageComponent {...props} data={Images} />
@@ -119,6 +119,12 @@ const styles = StyleSheet.create({
   listView: {
     display: 'flex',
     width: '100%',
-    flex: 1,
+    backgroundColor:'white'
+  },
+  marka: {
+    borderRadius:20,
+    borderColor:'#ECEAF8',
+    borderWidth:.1,
+    backgroundColor: 'white',
   },
 });

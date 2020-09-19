@@ -18,24 +18,34 @@ export default function Info({title, buttonName, category}) {
 
 const styles = StyleSheet.create({
   view: {
-    width: '90%',
-    marginTop: '5%',
+    width: '100%',
+    backgroundColor:'white',
+    paddingTop: '5%',
+    paddingLeft: '7.5%',
+    paddingRight: '7.5%',
     fontFamily: 'Roboto',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   button: {
-    width: 60,
     alignItems: 'flex-end',
     marginTop: 18,
   },
   textButton: {
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 20,
+    borderColor: 'black',
+    paddingLeft: 12,
+    paddingRight: 12,
+    paddingTop: 5,
+    paddingBottom: 5,
     fontSize: 11,
     fontWeight: '600',
   },
-  h2: {fontSize: 20, marginTop: 2},
+  h2: {fontSize: 18, marginTop: 2},
   Text: {
-    fontSize: 21,
-    fontWeight: '600',
+    fontSize: 22,
+    fontFamily: 'OpenSans-SemiBold',
   },
 });

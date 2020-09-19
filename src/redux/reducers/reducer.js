@@ -1,8 +1,36 @@
+import {SET_TOKEN} from '../constants/action-types';
+import {AsyncStorage} from 'react-native';
+
 const initialState = {
-  title: 'Popüler Markalar',
+  title: 'Markalar',
+  isLoading: true,
+  isSignout: false,
+  userToken: AsyncStorage.getItem('userToken'),
 };
 function rootReducer(state = initialState, action) {
-  return state;
+  switch (action.type) {
+    case 'RESTORE_TOKEN':
+      return {
+        ...state,
+        userToken: action.token,
+        isLoading: false,
+      };
+    case SET_TOKEN: {
+      return {
+        ...state,
+        isSignout: false,
+        userToken: action.payload,
+      };
+    }
+    case 'SIGN_OUT':
+      return {
+        ...state,
+        isSignout: true,
+        userToken: null,
+      };
+    default:
+      return state;
+  }
 }
 
 export default rootReducer;

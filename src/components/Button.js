@@ -24,7 +24,6 @@ export default function ButtonGroup() {
   const data = ['4.5 Üzeri', 'Yakınlarda', '30 Dakika', 'Beğenilenler'];
   const [selected, setSelected] = useState(data[0]);
   const changeValue = (title) => {
-      debugger
     setSelected(title);
   };
   return (
@@ -42,8 +41,8 @@ const styles = StyleSheet.create({
   parent: {
     display: 'flex',
     flexDirection: 'row',
-    width: '100%',
-    marginLeft: '10%',
+    justifyContent:'space-around',
+    marginLeft:'7.5%',
     marginTop: 12,
   },
   text: {
@@ -60,12 +59,11 @@ const styles = StyleSheet.create({
     width: 'auto',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingRight: 12,
-    paddingLeft: 12,
-    paddingBottom:6,
-    paddingTop:6,
+    paddingRight: 16,
+    paddingLeft: 16,
+    paddingBottom: 8,
+    paddingTop: 8,
     height: 24,
-    marginRight: 18,
     borderRadius: 24,
     backgroundColor: 'white',
     borderColor: 'black',

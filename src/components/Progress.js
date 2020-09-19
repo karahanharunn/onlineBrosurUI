@@ -11,5 +11,6 @@ const styles = StyleSheet.create({
     marginTop: 24,
     backgroundColor: 'orange',
     width: '90%',
+    marginLeft:'5%'
   },
 });

@@ -1,6 +1,7 @@
 import React from 'react';
-import {View, FlatList, Text, StyleSheet, Image} from 'react-native';
-
+import {View, FlatList, Text, StyleSheet, Image, Dimensions} from 'react-native';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 export default function ImageComponent({data}) {
   return (
     <FlatList
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
   end: {fontSize: 11, color: 'gray'},
 
   tinyLogo: {
-    width: 240,
+    width: windowWidth/3,
     height: 120,
   },
   flatList: {
