@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, FlatList, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import FastImage from 'react-native-fast-image';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 export default function ImageComponent({data}) {
@@ -12,13 +13,14 @@ export default function ImageComponent({data}) {
       keyExtractor={(item) => item.id}
       renderItem={({item}) => (
         <View style={styles.parentView}>
-          <Image
+          <FastImage
             style={styles.tinyLogo}
             source={{
               uri: item.imageUrl,
             }}
-            resizeMode={"contain"}
+            resizeMode={"cover"}
           />
+          
           <View style={styles.flex}>
             <Text style={styles.start}>{item.name}</Text>
             <Text style={styles.end}>{item.minute + ' min'}</Text>
@@ -31,13 +33,12 @@ export default function ImageComponent({data}) {
 }
 const styles = StyleSheet.create({
   parentView: {
-    marginTop: 18,
     marginRight: 24,
+
   },
   flex: {
     display: 'flex',
     marginTop: 5,
-    flexDirection: 'row',
     justifyContent: 'space-between',
   },
   subTitle: {
@@ -47,10 +48,11 @@ const styles = StyleSheet.create({
   end: {fontSize: 11, color: 'gray'},
 
   tinyLogo: {
-    width: windowWidth/3,
-    height: 120,
+    width: windowWidth/1.5,
+    height: windowWidth,
   },
   flatList: {
     marginLeft: '6%',
+
   },
 });

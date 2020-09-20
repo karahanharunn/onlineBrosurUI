@@ -1,12 +1,14 @@
 import {AsyncStorage} from 'react-native';
 import Axios from 'axios';
 import {config} from './Config';
+import {tokenService} from './TokenService';
 
 export const AppService = {
   getBrands,
 };
 async function getBrands() {
-  return instance.get('/brand/list');
+
+  return instance.get(config.authApiUrl + '/brand/list');
 }
 
 // Create axios client, pre-configured with baseURL
@@ -27,8 +29,8 @@ instance.interceptors.response.use(
   },
 );
 instance.interceptors.request.use(
-  (config) => {
-    accessToken = AsyncStorage.getItem('userToken');
+  async (config) => {
+    accessToken = await tokenService.get();
     if (accessToken) {
       config.headers['Authorization'] = accessToken;
     }
@@ -38,4 +40,3 @@ instance.interceptors.request.use(
     Promise.reject(error);
   },
 );
-const getToken = () => {};

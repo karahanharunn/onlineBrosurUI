@@ -9,7 +9,8 @@
     "test": "jest",
     "lint": "eslint .",
     "pod": "npx pod-install ios",
-    "svgr": "npx @svgr/cli ./src/icons/back.svg -d ./src/components/icons --native --icon --svg-props width=20,height=20"
+    "loadScript": "adb reverse tcp:8081 tcp:8081",
+    "svgr": "npx @svgr/cli ./src/icons -d ./src/components/icons  --native --icon"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.0",
@@ -23,6 +24,7 @@
     "jetifier": "^1.6.6",
     "react": "16.13.1",
     "react-native": "0.63.2",
+    "react-native-fast-image": "^8.3.2",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-reanimated": "^1.13.0",
     "react-native-safe-area-context": "^3.1.7",

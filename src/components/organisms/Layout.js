@@ -6,10 +6,5 @@ import {AsyncStorage} from 'react-native';
 
 export default function Layout(props) {
   const userToken = useSelector((state) => state.userToken);
-  const remove = async () => {
-    const keys = await AsyncStorage.getAllKeys();
-    await AsyncStorage.multiRemove(keys);
-  };
-  remove();
   return userToken ? <AppNavigator /> : <AuthNavigatorScreen />;
 }

@@ -2,6 +2,8 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import styled from 'styled-components';
 import Index from './icons/index';
+import TitleLight from './atoms/titles/TitleLight';
+import {SCALE_10} from '../styles/spacing';
 const Button = styled.TouchableOpacity``;
 const BottomNavigator = styled.View`
   flex: 1;
@@ -41,15 +43,21 @@ export default function MyTabBar({state, descriptors, navigation}) {
         };
 
         return (
-          <TouchableOpacity
-            style={[styles.button]}
-            onPress={onPress}>
+          <TouchableOpacity style={[styles.button]} onPress={onPress}>
             <Index
               id={icon}
-              color={isFocused ? 'orange' : '#afafaf'}
+              color={isFocused ? '#507AFC' : 'black'}
               size={isFocused ? 24 : 20}
+              active={!isFocused}
             />
-          
+            <TitleLight
+              style={{
+                fontSize: 13,
+                color: isFocused ? '#507AFC' : 'black',
+                fontFamily: isFocused ? 'OpenSans-Bold' : 'OpenSans-Regular',
+              }}>
+              {label}
+            </TitleLight>
           </TouchableOpacity>
         );
       })}
@@ -62,11 +70,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
-    fontSize: 14,
-    backgroundColor:'white',
+    padding: SCALE_10,
+    fontSize: SCALE_10,
+    backgroundColor: 'white',
   },
-  buttonOrange: {backgroundColor: 'orange',},
+  buttonOrange: {backgroundColor: 'orange'},
 
   view: {
     flexDirection: 'row',

@@ -6,10 +6,11 @@ function SvgChevron(props) {
     <Svg
       className="chevron_svg__w-6 chevron_svg__h-6"
       fill="none"
-      stroke="black"
+      stroke="currentColor"
       viewBox="0 0 24 24"
-      width="10"
-      height="10"
+      width="1em"
+      height="1em"
+
       {...props}>
       <Path
         strokeLinecap="round"

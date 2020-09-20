@@ -3,7 +3,6 @@ import {
   View,
   Text,
   FlatList,
-  Image,
   StyleSheet,
   Animated,
   ScrollView,
@@ -11,17 +10,22 @@ import {
   Dimensions,
 } from 'react-native';
 import Card from './Card';
-import SvgBack, {default as Back} from './icons/Back';
 import {SharedElement} from 'react-navigation-shared-element';
-const cardWith = 50;
-const cardHeight = 50;
+import {config} from '../../services/Config';
+import {LOGIN_BACKGROUND, GRAY_LIGHT} from '../../styles/colors';
+import Search from '../Search';
+import InfoProduct from '../molecules/InfoProduct';
+import SvgBack from '../icons/Back';
+import { SCALE_12 } from '../../styles/spacing';
+const cardWith = 60;
+const cardHeight = 40;
 const {width} = Dimensions.get('screen');
 const spacingCard = 20;
 const Spacing = 12;
 export default function CategoryDetail({route, navigation: {goBack}}) {
   const {data, item} = route.params;
 
-  const selectedItemindex = data.findIndex((i) => i.id === item.id);
+  const selectedItemindex = data.findIndex((i) => i.name === item.name);
   const ref = React.useRef();
   const [Value, setValue] = useState(selectedItemindex);
   const mountedAnimated = React.useRef(new Animated.Value(0)).current;
@@ -56,27 +60,28 @@ export default function CategoryDetail({route, navigation: {goBack}}) {
 
   return (
     <View style={{flex: 1}}>
-      <View style={{flex: 1, backgroundColor: 'black'}}>
-        <SvgBack onPress={() => goBack()} />
-        <Animated.FlatList
+      <View
+        style={{
+          backgroundColor: LOGIN_BACKGROUND,
+          display: 'flex',
+          flexDirection: 'row',
+          overflow: 'scroll',
+          height: 130,
+        }}>
+        <SvgBack fill="white" style={{margin:SCALE_12}} width={20} height={20} onPress={() => goBack()} />
+        <Animated.View
           style={[
             styles.flatList,
             {
               marginLeft: width / 2 - cardWith / 2 - Spacing,
               transform: [{translateX: translateX}],
             },
-          ]}
-          data={data}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
-          snapToAlignment="start"
-          snapToInterval={cardWith + Spacing}
-          renderItem={({item, index}) => {
+          ]}>
+          {data.map((item, index) => {
             const inputRange = [index - 1, index, index + 1];
             const opacity = activeIndex.interpolate({
               inputRange,
-              outputRange: [0.5, 1, 0.5],
+              outputRange: [0.3, 1, 0.3],
               extrapolate: 'clamp',
             });
             const cardScale = activeIndex.interpolate({
@@ -91,7 +96,7 @@ export default function CategoryDetail({route, navigation: {goBack}}) {
             });
             return (
               <TouchableWithoutFeedback
-                key={item.id}
+                key={item.name}
                 onPress={() => {
                   activeIndex.setValue(index);
                   setValue(index);
@@ -103,18 +108,18 @@ export default function CategoryDetail({route, navigation: {goBack}}) {
                 <View
                   style={{
                     ...styles.center,
+                    width: 90,
                     padding: Spacing,
-                    width: 75,
                   }}>
-                  <SharedElement id={`item ${item.id} icon`}>
-                    <Animated.View style={[styles.subView, {opacity}]}>
+                  <SharedElement id={`item ${item.name} icon`}>
+                    <Animated.View style={[styles.subView]}>
                       <Animated.Image
                         style={{
                           ...styles.tinyLogo,
                           transform: [{scale: cardScale}],
                         }}
                         source={{
-                          uri: item.imageUrl,
+                          uri: config.apiUrl + item.imageUrl,
                         }}
                         resizeMode={'contain'}
                       />
@@ -125,16 +130,18 @@ export default function CategoryDetail({route, navigation: {goBack}}) {
                       styles.title,
                       ,
                       item.id === activeIndex && styles.redColor,
-                      {transform: [{scale: textScale}]},
+                      {opacity},
                     ]}>
                     {item.name}
                   </Animated.Text>
                 </View>
               </TouchableWithoutFeedback>
             );
-          }}
-        />
+          })}
+        </Animated.View>
       </View>
+      <Search style={styles.search} />
+
       <View style={styles.Info}>
         <Animated.FlatList
           style={{opacity: mountedAnimated, transform: [{translateY}]}}
@@ -162,15 +169,17 @@ export default function CategoryDetail({route, navigation: {goBack}}) {
             return (
               <ScrollView
                 style={{
-                  backgroundColor: 'rgba(0,0,0,0.05)',
                   borderRadius: 16,
-                  width: width - spacingCard,
-                  margin: 12,
+                  width: width,
                 }}>
-                <View style={{padding: spacingCard}}>
-                  <Text style={{fontSize: 16}}>
-                    {Array(50).fill('Dummy data örnek \n')}
-                  </Text>
+                <View
+                  style={{
+                    flex: 1,
+                    marginLeft: '6%',
+                  }}>
+                  {data.map((item) => (
+                    <InfoProduct key={item.name} item={item} />
+                  ))}
                 </View>
               </ScrollView>
             );
@@ -183,15 +192,19 @@ export const styles = StyleSheet.create({
   parentView: {
     alignItems: 'center',
   },
-  Info: {
-    flex: 4,
+  search: {
+    width: '90%',
+    marginLeft: '5%',
+    position: 'absolute',
+    top: 110,
   },
+  Info: {marginTop: 50},
   title: {
-    fontSize: 17,
-    marginTop: 10,
+    fontSize: 12,
+    fontFamily: 'OpenSans-Regular',
+    marginTop: 8,
     marginRight: 10,
     width: 120,
-    fontWeight: '700',
     color: 'white',
   },
   center: {
@@ -203,17 +216,19 @@ export const styles = StyleSheet.create({
   tinyLogo: {
     width: cardWith,
     height: cardHeight,
-    borderRadius: 50,
   },
   subView: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    position: 'relative',
+    justifyContent: 'center',
+    borderRadius: 50,
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
   flatList: {
-    flex: 1,
-    overflow: 'hidden',
-    width: '200%',
-    height: cardHeight * 2,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignContent: 'center',
+    flexWrap: 'nowrap',
+    marginTop: 25,
+    marginBottom: 25,
   },
 });

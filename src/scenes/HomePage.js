@@ -1,17 +1,19 @@
 import React from 'react';
 import {Easing, View, Text, StyleSheet, FlatList, Button} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
-import CategoryDetail from '../components/CategoryDetail';
+import CategoryDetail from '../components/organisms/CategoryDetail';
 import BrandDetail from '../components/BrandDetail';
 import {HeaderBackButton} from '@react-navigation/stack';
 import Search from '../components/Search';
-import Card from '../components/Card';
+import Card from '../components/organisms/Card';
 import ButtonGroup from '../components/Button';
 import Progress from '../components/Progress';
 import Info from '../components/info';
-import ImageComponent from '../components/Image';
+import ImageComponent from '../components/organisms/Image';
 
 import {useSelector} from 'react-redux';
+import {AppService} from '../services/AppService';
+import {GRAY_DARK, GRAY_LIGHT} from '../styles/colors';
 const HomeStack = createStackNavigator();
 const Images = [
   {
@@ -44,13 +46,22 @@ const Images = [
   },
 ];
 function HomePage(props) {
+  const [data, setData] = React.useState();
+  React.useEffect(() => {
+    (() => {
+      AppService.getBrands().then((response) => {
+        setData(response.data);
+      });
+    })();
+  }, []);
   const state = useSelector((state) => state.title);
   return (
-    <View style={{flex: 1, alignItems: 'center', overflow: 'visible'}}>
+    <View style={{flex: 1, alignItems: 'center', overflow: 'scroll',backgroundColor:'white'}}>
       {/* <Search/> */}
+      <Search background={GRAY_LIGHT} style={styles.search} />
       <View style={[styles.listView, styles.marka]}>
         <Info title="Markalar" category="h1" buttonName="Show All" />
-        <Card {...props} />
+        <Card data={data} {...props} />
         <ButtonGroup />
         <Progress />
       </View>
@@ -116,15 +127,20 @@ export default function HomeStackScreen({navigation}) {
   );
 }
 const styles = StyleSheet.create({
+  search: {
+    width: '80%',
+    backgroundColor: GRAY_LIGHT,
+    marginTop:'5%'
+  },
   listView: {
     display: 'flex',
     width: '100%',
-    backgroundColor:'white'
+    backgroundColor: 'white',
   },
   marka: {
-    borderRadius:20,
-    borderColor:'#ECEAF8',
-    borderWidth:.1,
+    borderRadius: 20,
+    borderColor: '#ECEAF8',
+    borderWidth: 0.1,
     backgroundColor: 'white',
   },
 });

@@ -6,10 +6,10 @@ function SvgDelete(props) {
     <Svg
       className="delete_svg__w-6 delete_svg__h-6"
       fill="none"
-      stroke="gray"
+      stroke="currentColor"
       viewBox="0 0 24 24"
-      width="20"
-      height="20"
+      width="1em"
+      height="1em"
       {...props}>
       <Path
         strokeLinecap="round"

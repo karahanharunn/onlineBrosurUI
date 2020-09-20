@@ -30,6 +30,7 @@ export default function ButtonGroup() {
     <View style={styles.parent}>
       {data.map((item) => (
         <Button
+          key={item}
           changeValue={changeValue}
           selected={selected}
           title={item}></Button>
@@ -41,8 +42,8 @@ const styles = StyleSheet.create({
   parent: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent:'space-around',
-    marginLeft:'7.5%',
+    justifyContent: 'space-around',
+    marginLeft: '7.5%',
     marginTop: 12,
   },
   text: {

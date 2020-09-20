@@ -1,24 +1,43 @@
 import React from 'react';
 import {default as Home} from './Home';
-import {default as Menu} from './Menu';
-import {default as Settings} from './Settings';
-import {default as Bookmark} from './Bookmark';
+import {default as List} from './List';
+import {default as Love} from './Love';
 import {default as Search} from './Search';
-import {View, Text} from 'react-native';
-
+import {default as User} from './User';
+import {default as HomeBack} from './HomeBack';
+import {default as ListWithBack} from './ListWithBack';
+import {default as LoveWithBack} from './LoveWithBack';
+import {default as UserWithBack} from './UserWithBack';
 export default function Index(props) {
-  let {id, color, size} = props;
+  let {id, color, size, active} = props;
 
   switch (id) {
-    case 'Home':
-      return <Home color={color} size={size} />;
+    case 'Home': {
+      return active ? (
+        <Home stroke={color} width={size} height={size} />
+      ) : (
+        <HomeBack fill={color} width={size} height={size} />
+      );
+    }
     case 'Menu':
-      return <Menu color={color} size={size} />;
+      return active ? (
+        <List fill={color} width={size} height={size} />
+      ) : (
+        <ListWithBack fill={color} width={size} height={size} />
+      );
     case 'List':
-      return <Bookmark color={color} size={size} />;
+      return active ? (
+        <Love fill={color} width={size} height={size} />
+      ) : (
+        <LoveWithBack fill={color} width={size} height={size} />
+      );
     case 'Settings':
-      return <Settings color={color} size={size} />;
+      return active ? (
+        <User fill={color} width={size} height={size} />
+      ) : (
+        <UserWithBack fill={color} width={size} height={size} />
+      );
     case 'Search':
-      return <Search color={color} size={size} />;
+      return <Search stroke={color} width={size} height={size} />;
   }
 }

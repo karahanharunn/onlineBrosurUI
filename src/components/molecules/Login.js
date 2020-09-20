@@ -6,21 +6,48 @@ import {LOGIN_BUTTON} from '../../styles/colors';
 import {useDispatch} from 'react-redux';
 import setToken from '../../redux/actions/action';
 import {instance} from '../../services/AppService';
-
+import {tokenService} from '../../services/TokenService';
 export default function Login() {
+ const encodeBase64 = (input) => {
+    const chars =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+    let str = input;
+    let output = '';
+
+    for (
+      let block = 0, charCode, i = 0, map = chars;
+      str.charAt(i | 0) || ((map = '='), i % 1);
+      output += map.charAt(63 & (block >> (8 - (i % 1) * 8)))
+    ) {
+      charCode = str.charCodeAt((i += 3 / 4));
+
+      if (charCode > 0xff) {
+        console.log(
+          "'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.",
+        );
+      }
+
+      block = (block << 8) | charCode;
+    }
+
+    return output;
+  };
   const dispatch = useDispatch();
   const onLogin = async () => {
     await AsyncStorage.setItem(
       'userToken',
       'Basic Y29uc3VtZXI6UkIsejZufXF2dUppck04NA==',
     );
-    instance.defaults.headers.common['Authorization'] =
-      'Basic Y29uc3VtZXI6UkIsejZufXF2dUppck04NA==';
-    dispatch(setToken('Basic Y29uc3VtZXI6UkIsejZufXF2dUppck04NA=='));
+    const value = 'Basic ' + encodeBase64(`${username}:${password}`);
+
+    console.log(value);
+    tokenService.set(value);
+
+    dispatch(setToken(value));
   };
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('consumer');
+  const [password, setPassword] = useState('RB,z6n}qvuJirM84');
   return (
     <>
       <Input

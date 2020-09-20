@@ -15,4 +15,5 @@ export const GRAY_DARK = '#8a8a8a';
 
 export const LOGIN_BACKGROUND = '#142548';
 export const LOGIN_BUTTON = '#E41684';
+export const PLACEHOLDER = '#95979A';
 

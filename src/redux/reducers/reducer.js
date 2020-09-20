@@ -5,7 +5,7 @@ const initialState = {
   title: 'Markalar',
   isLoading: true,
   isSignout: false,
-  userToken: AsyncStorage.getItem('userToken'),
+  userToken: null,
 };
 function rootReducer(state = initialState, action) {
   switch (action.type) {

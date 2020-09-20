@@ -1,4 +1,5 @@
 {
     "name": "ProjectBrosur",
-    "authApiUrl": "https://scamobileapitest.gkfxprime.com/api/v1",
+    "authApiUrl": "http://52.201.170.90:2777/api/",
+    "apiUrl":"http://52.201.170.90:2777/"
 }
