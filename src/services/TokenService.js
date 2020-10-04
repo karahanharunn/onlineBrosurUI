@@ -1,6 +1,4 @@
-import {instance} from './AppService';
-import { AsyncStorage } from 'react-native';
-
+import AsyncStorage from "@react-native-community/async-storage";
 
 let token;
 export const tokenService = {
@@ -8,7 +6,6 @@ export const tokenService = {
   set,
 };
 async function get() {
-  console.log(token);
   if (token) return token;
   token = await AsyncStorage.getItem('userToken');
   return token;

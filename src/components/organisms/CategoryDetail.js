@@ -1,22 +1,19 @@
 import React, {useState} from 'react';
 import {
   View,
-  Text,
-  FlatList,
   StyleSheet,
   Animated,
   ScrollView,
   TouchableWithoutFeedback,
   Dimensions,
 } from 'react-native';
-import Card from './Card';
 import {SharedElement} from 'react-navigation-shared-element';
 import {config} from '../../services/Config';
-import {LOGIN_BACKGROUND, GRAY_LIGHT} from '../../styles/colors';
+import {LOGIN_BACKGROUND} from '../../styles/colors';
 import Search from '../Search';
 import InfoProduct from '../molecules/InfoProduct';
 import SvgBack from '../icons/Back';
-import { SCALE_12 } from '../../styles/spacing';
+import {SCALE_12} from '../../styles/spacing';
 const cardWith = 60;
 const cardHeight = 40;
 const {width} = Dimensions.get('screen');
@@ -52,7 +49,7 @@ export default function CategoryDetail({route, navigation: {goBack}}) {
     inputRange: [0, 1],
     outputRange: [50, 0],
   });
-  const size = cardWith + Spacing * 2;
+  const size = cardWith + Spacing * 2.5;
   const translateX = animatedIndex.interpolate({
     inputRange: [-1, 0, 1],
     outputRange: [size, 0, -size],
@@ -68,13 +65,22 @@ export default function CategoryDetail({route, navigation: {goBack}}) {
           overflow: 'scroll',
           height: 130,
         }}>
-        <SvgBack fill="white" style={{margin:SCALE_12}} width={20} height={20} onPress={() => goBack()} />
+        <SvgBack
+          fill="white"
+          style={{margin: SCALE_12}}
+          width={20}
+          height={20}
+          onPress={() => goBack()}
+        />
         <Animated.View
+          scrollEnabled={true}
+          nestedScrollEnabled={true}
           style={[
             styles.flatList,
             {
-              marginLeft: width / 2 - cardWith / 2 - Spacing,
+              marginLeft: width / 2 - cardWith / 2 - Spacing * 2.5,
               transform: [{translateX: translateX}],
+              overflow: 'scroll',
             },
           ]}>
           {data.map((item, index) => {
@@ -148,7 +154,7 @@ export default function CategoryDetail({route, navigation: {goBack}}) {
           ref={ref}
           data={data}
           decelerationRate={0}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.name}
           horizontal
           disableIntervalMomentum={true}
           snapToInterval={width}

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, AsyncStorage} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import Input from '../atoms/Input';
 import Button from '../atoms/Button';
 import {LOGIN_BUTTON} from '../../styles/colors';
@@ -7,6 +7,7 @@ import {useDispatch} from 'react-redux';
 import setToken from '../../redux/actions/action';
 import {instance} from '../../services/AppService';
 import {tokenService} from '../../services/TokenService';
+import {AsyncStorage} from '@react-native-community/async-storage'
 export default function Login() {
  const encodeBase64 = (input) => {
     const chars =
@@ -34,13 +35,8 @@ export default function Login() {
   };
   const dispatch = useDispatch();
   const onLogin = async () => {
-    await AsyncStorage.setItem(
-      'userToken',
-      'Basic Y29uc3VtZXI6UkIsejZufXF2dUppck04NA==',
-    );
     const value = 'Basic ' + encodeBase64(`${username}:${password}`);
 
-    console.log(value);
     tokenService.set(value);
 
     dispatch(setToken(value));

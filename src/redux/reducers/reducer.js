@@ -1,5 +1,6 @@
 import {SET_TOKEN} from '../constants/action-types';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage} from '@react-native-community/async-storage'
+
 
 const initialState = {
   title: 'Markalar',

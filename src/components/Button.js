@@ -42,8 +42,7 @@ const styles = StyleSheet.create({
   parent: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginLeft: '7.5%',
+    justifyContent: 'space-evenly',
     marginTop: 12,
   },
   text: {

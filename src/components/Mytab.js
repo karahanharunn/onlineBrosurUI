@@ -43,17 +43,17 @@ export default function MyTabBar({state, descriptors, navigation}) {
         };
 
         return (
-          <TouchableOpacity style={[styles.button]} onPress={onPress}>
+          <TouchableOpacity key={label} style={[styles.button]} onPress={onPress}>
             <Index
               id={icon}
-              color={isFocused ? '#507AFC' : 'black'}
+              color={isFocused ? '#413B89' : 'black'}
               size={isFocused ? 24 : 20}
               active={!isFocused}
             />
             <TitleLight
               style={{
                 fontSize: 13,
-                color: isFocused ? '#507AFC' : 'black',
+                color: isFocused ? '#413B89' : 'black',
                 fontFamily: isFocused ? 'OpenSans-Bold' : 'OpenSans-Regular',
               }}>
               {label}

@@ -1,14 +1,17 @@
-import {AsyncStorage} from 'react-native';
 import Axios from 'axios';
 import {config} from './Config';
 import {tokenService} from './TokenService';
 
 export const AppService = {
   getBrands,
+  getBrosure
 };
 async function getBrands() {
 
   return instance.get(config.authApiUrl + '/brand/list');
+}
+async function getBrosure() {
+  return instance.get(config.authApiUrl + '/brochure/list');
 }
 
 // Create axios client, pre-configured with baseURL

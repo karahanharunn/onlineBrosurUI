@@ -6,13 +6,10 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
-import SvgDelete from '../icons/Delete';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {SharedElement} from 'react-navigation-shared-element';
 import {GRAY_DARK} from '../../styles/colors';
-import {config} from '../../services/Config';
 import TitleLight from '../atoms/titles/TitleLight';
-import Title from '../atoms/titles/Title';
 import Image from '../atoms/image/Image';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -38,23 +35,22 @@ export default function Card({
       snapToInterval={cardWith + Spacing}
       renderItem={({item}) => (
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('Category', {
-              data: data,
-              selectedId: item.name,
-              item,
-            })
-          }>
+        // onPress={() =>
+        //   // navigation.navigate('Category', {
+        //   //   data: data,
+        //   //   selectedId: item.name,
+        //   //   item,
+        //   // })
+        // }
+        >
           <View style={[styles.parentView]}>
-            <SharedElement id={`item ${item.id} icon`}>
-              <View style={styles.subView}>
-                {data ? (
-                  <Image url={item.imageUrl} />
-                ) : (
-                  <ActivityIndicator size="large" />
-                )}
-              </View>
-            </SharedElement>
+            <View style={styles.subView}>
+              {data ? (
+                <Image url={item.imageUrl} resizeMode={'contain'} />
+              ) : (
+                <ActivityIndicator size="large" />
+              )}
+            </View>
           </View>
           {/* <Title>{item.name}</Title> */}
           <TitleLight>{item.name}</TitleLight>
