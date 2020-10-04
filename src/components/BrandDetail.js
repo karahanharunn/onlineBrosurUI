@@ -12,6 +12,7 @@ import FitImage from 'react-native-fit-image';
 import TitleLight from './atoms/titles/TitleLight';
 import SvgBack from './icons/Back';
 import Swiper from 'react-native-swiper';
+import Image from './atoms/image/Image';
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
 const ITEM_HEIGHT = Math.round((ITEM_WIDTH * 3) / 4);
@@ -59,16 +60,24 @@ export default function BrandDetail({route, navigation: {goBack}}) {
 
   const Detail = () => (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <Swiper renderPagination={renderPagination} showsButtons loop={false}>
-        {Brosure.map((item) => (
-          <View style={styles.slide}>
-            <FitImage
-              source={{uri: config.apiUrl + item.imageUrl}}
-              style={styles.image}
+      <View style={styles.slide}>
+        <Swiper
+          removeClippedSubviews
+          renderPagination={renderPagination}
+          showsButtons
+          loop={false}>
+          {Brosure.map((item, index) => (
+            <Image
+              style={{
+                width: SLIDER_WIDTH,
+                height: '100%',
+                backgroundColor: 'transparent',
+              }}
+              url={item.imageUrl}
             />
-          </View>
-        ))}
-      </Swiper>
+          ))}
+        </Swiper>
+      </View>
       <View style={styles.info}>
         <Column>
           <View
@@ -99,7 +108,6 @@ export default function BrandDetail({route, navigation: {goBack}}) {
       swipeEnabled={false}
       style={{
         backgroundColor: 'white',
-        padding: 4,
       }}
       showPageIndicator={false}
       removeClippedSubviews={true}
@@ -109,7 +117,7 @@ export default function BrandDetail({route, navigation: {goBack}}) {
           style={{shadowColor: 'white'}}
           tabStyle={{
             width: SLIDER_WIDTH / 3,
-            height: 50,
+            height: 45,
           }}
           renderIndicator={() => <View></View>}
           scrollEnabled={true}
@@ -117,17 +125,16 @@ export default function BrandDetail({route, navigation: {goBack}}) {
             <View
               style={{
                 display: 'flex',
-                width: (SLIDER_WIDTH - 20) / 3,
-                borderRadius: 48,
-                height: 40,
+                width: SLIDER_WIDTH / 3,
                 justifyContent: 'center',
-                backgroundColor: focused ? 'white' : '#E8E5E8',
-
+                height: 45,
+                backgroundColor: focused ? '#413B89' : '#E8E5E8',
+                borderRadius: 8,
                 alignContent: 'center',
               }}>
               <Text
                 style={{
-                  color: 'black',
+                  color: focused ? 'white' : 'black',
                   textAlign: 'center',
                   fontWeight: 'bold',
                 }}>
@@ -137,13 +144,11 @@ export default function BrandDetail({route, navigation: {goBack}}) {
           )}
           style={{
             shadowOpacity: 0,
-            height: 50,
+            height: 45,
             display: 'flex',
             alignContent: 'center',
             backgroundColor: '#E8E5E8',
             elevation: 4,
-            borderRadius: 48,
-            marginVertical: 5,
           }}
         />
       )}
@@ -152,20 +157,16 @@ export default function BrandDetail({route, navigation: {goBack}}) {
 }
 const styles = StyleSheet.create({
   slide: {
+    width: SLIDER_WIDTH,
+    height: undefined,
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    zIndex: 99,
   },
   text: {
     color: '#fff',
     fontSize: 30,
     fontWeight: 'bold',
   },
-  image: {
-    width: SLIDER_WIDTH,
-    flex: 1,
-  },
+
   paginationStyle: {
     justifyContent: 'center',
     display: 'flex',

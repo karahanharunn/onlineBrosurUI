@@ -111,7 +111,11 @@ export default function HomeStackScreen({navigation}) {
           fontSize: 12,
         },
       }}>
-      <HomeStack.Screen name="Anasayfa" component={HomePage} />
+      <HomeStack.Screen
+        name="Anasayfa"
+        component={HomePage}
+        options={{headerShown: false}}
+      />
       <HomeStack.Screen name="Category" component={CategoryDetail} />
       <HomeStack.Screen
         name="Brand"
@@ -137,9 +141,9 @@ export default function HomeStackScreen({navigation}) {
           },
           headerStyle: {
             height: 40,
-            elevation:0
+            elevation: 0,
           },
-          headerTitle:'Logo Gelecek',
+          headerTitle: 'Logo Gelecek',
           headerLeft: (props) => (
             <HeaderBackButton
               style={{width: 15, height: 15}}
@@ -174,7 +178,7 @@ export default function HomeStackScreen({navigation}) {
                 <SvgLove
                   width={24}
                   height={24}
-                  style={{marginLeft:16}}
+                  style={{marginLeft: 16}}
                   fill="black"
                   {...props}
                 />
