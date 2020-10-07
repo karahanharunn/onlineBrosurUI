@@ -17,3 +17,9 @@ export const LOGIN_BACKGROUND = '#142548';
 export const LOGIN_BUTTON = '#E41684';
 export const PLACEHOLDER = '#95979A';
 
+
+//Search
+export const SEARCH_BACKGROUND = '#F6F4F9';
+export const SEARCH_TEXT = '#3C3C43';
+export const SEARCH_LOCATION = '#9B8ACA';
+

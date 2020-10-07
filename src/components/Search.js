@@ -6,13 +6,12 @@ import {
   StyleSheet,
   TouchableHighlight,
 } from 'react-native';
-import Index from './icons';
 import {default as Delete} from './icons/Delete';
-import {GRAY_MEDIUM, LOGIN_BACKGROUND} from '../styles/colors';
+import {SEARCH_BACKGROUND, SEARCH_TEXT} from '../styles/colors';
 import Input from './atoms/Input';
 
-export default function Search({style, background = 'white'}) {
-  const [text, onChangeText] = React.useState();
+export default function Search({style, left, right, placeholder, ...rest}) {
+  const [text, setText] = React.useState();
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -36,44 +35,45 @@ export default function Search({style, background = 'white'}) {
   }, []);
 
   return (
-    <View style={[styles.searchSection, style]}>
-      <Input
-        style={[styles.input, {backgroundColor: background}]}
-        placeholder="Search here..."
-        value={text}
-        onSubmitEditing={Keyboard.dismiss}
-      />
-      {text && (
-        <TouchableHighlight onPress={() => onChangeText()}>
-          <Delete />
+    <View {...rest} style={[styles.searchSection, style]}>
+      <View
+        style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+        {left}
+        <TextInput
+          style={[styles.input]}
+          placeholder={placeholder}
+          onChangeText={(e) => setText(e)}
+          value={text}
+          onSubmitEditing={Keyboard.dismiss}
+        />
+      </View>
+      {text ? (
+        <TouchableHighlight onPress={(e) => setText(null)}>
+          <Delete
+            width={16}
+            height={16}
+            color={SEARCH_TEXT}
+            fill={SEARCH_TEXT}
+          />
         </TouchableHighlight>
+      ) : (
+        right
       )}
-      <Index id="Search" color={LOGIN_BACKGROUND} size="20" />
     </View>
   );
 }
 const styles = StyleSheet.create({
   searchSection: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 20,
-    paddingLeft: 12,
-    paddingRight: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-
-    elevation: 8,
+    height: 40,
+    backgroundColor: SEARCH_BACKGROUND,
+    borderRadius: 36,
+    paddingHorizontal: 12,
+    flex: 1,
   },
   input: {
-    flex: 1,
-    height: 40,
-    color: '#424242',
+    color: SEARCH_TEXT,
   },
 });

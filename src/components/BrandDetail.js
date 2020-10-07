@@ -1,16 +1,11 @@
 import React, {useRef, useState, useEffect} from 'react';
 import {View, StyleSheet, Dimensions, FlatList, Text} from 'react-native';
 import {TabView, TabBar} from 'react-native-tab-view';
-import {GRAY_LIGHT} from '../styles/colors';
 import {SCALE_12, SCALE_10, SCALE_8, SCALE_16} from '../styles/spacing';
-import {config} from '../services/Config';
 import Button from './atoms/Button';
 import Column from './atoms/column/index';
-import SvgLove from './icons/Love';
 import Title from './atoms/titles/Title';
-import FitImage from 'react-native-fit-image';
 import TitleLight from './atoms/titles/TitleLight';
-import SvgBack from './icons/Back';
 import Swiper from 'react-native-swiper';
 import Image from './atoms/image/Image';
 const SLIDER_WIDTH = Dimensions.get('window').width;

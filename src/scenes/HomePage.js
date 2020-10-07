@@ -1,52 +1,27 @@
 import React, {useState, useEffect} from 'react';
-import {Easing, View, Text, StyleSheet, FlatList, Button} from 'react-native';
+import {Easing, View, StyleSheet, StatusBar, Platform} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import CategoryDetail from '../components/organisms/CategoryDetail';
 import BrandDetail from '../components/BrandDetail';
 import {HeaderBackButton} from '@react-navigation/stack';
 import Card from '../components/organisms/Card';
 import ButtonGroup from '../components/Button';
-import Progress from '../components/Progress';
-import Info from '../components/info';
 import ImageComponent from '../components/organisms/Image';
 import SvgDotsVertical from '../components/icons/DotsVertical';
 import {useSelector} from 'react-redux';
 import {AppService} from '../services/AppService';
-import {GRAY_LIGHT} from '../styles/colors';
+import {SEARCH_LOCATION, LOGIN_BACKGROUND} from '../styles/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import SvgSearch from '../components/icons/Search';
 import SvgLove from '../components/icons/Love';
+import Search from '../components/Search';
+import SvgLocation from '../components/icons/Location';
+import Profile from '../components/atoms/profile/index';
+import FlexRow from '../components/atoms/FlexRow/FlexRow';
+import Index from '../components/icons';
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
+
 const HomeStack = createStackNavigator();
-const Images = [
-  {
-    imageUrl:
-      'https://i12.haber7.net//haber/haber7/photos/2020/34/bim_25_28_agustos_aktuel_katalogu_trambolin_kamp_sandalyesi_televizyon_mutfak_urunlerinde_1598014931_7541.JPG',
-    name: 'Fast Food',
-    minute: 10,
-    count: '136 Places',
-  },
-  {
-    imageUrl:
-      'https://i12.haber7.net//haber/haber7/photos/2020/34/bim_25_28_agustos_aktuel_katalogu_trambolin_kamp_sandalyesi_televizyon_mutfak_urunlerinde_1598014931_7541.JPG',
-    name: 'Fast Food2',
-    minute: 25,
-    count: '256 Places',
-  },
-  {
-    imageUrl:
-      'https://i12.haber7.net//haber/haber7/photos/2020/34/bim_25_28_agustos_aktuel_katalogu_trambolin_kamp_sandalyesi_televizyon_mutfak_urunlerinde_1598014931_7541.JPG',
-    name: 'Fast Food3',
-    minute: 30,
-    count: '10 Places',
-  },
-  {
-    imageUrl:
-      'https://i12.haber7.net//haber/haber7/photos/2020/34/bim_25_28_agustos_aktuel_katalogu_trambolin_kamp_sandalyesi_televizyon_mutfak_urunlerinde_1598014931_7541.JPG',
-    name: 'Fast Food4',
-    minute: 40,
-    count: '248 Places',
-  },
-];
 function HomePage(props) {
   const [data, setData] = useState();
   const [brosure, setBrosure] = useState();
@@ -69,18 +44,69 @@ function HomePage(props) {
         overflow: 'scroll',
         backgroundColor: 'white',
       }}>
-      {/* <Search/> */}
-      {/* <Search background={GRAY_LIGHT} style={styles.search} /> */}
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="white"
+        style={styles.statusBar}
+      />
+      <FlexRow>
+        <Search
+          placeholder="Location"
+          left={
+            <SvgLocation
+              style={{color: 'white'}}
+              fill={SEARCH_LOCATION}
+              width={16}
+              height={16}
+            />
+          }
+          right={<Index id="Search" color={LOGIN_BACKGROUND} size="20" />}
+          style={styles.search}
+        />
+        <Profile />
+      </FlexRow>
+      <FlexRow
+        style={{
+          paddingHorizontal: 16,
+          marginTop: 8,
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Search
+          style={{
+            paddingHorizontal: 6,
+            borderRadius: 12,
+            backgroundColor: 'white',
+            borderWidth: 1,
+            borderRightWidth: 0,
+            borderColor: '#EFEFF0',
+          }}
+          placeholder="Search here..."
+          right={
+            <View
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 10,
+                backgroundColor: SEARCH_LOCATION,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Index id="Search" color={'white'} size="20" />
+            </View>
+          }
+        />
+      </FlexRow>
+      {/* <Search /> */}
       <View style={[styles.listView, styles.marka]}>
-        <Info title="Markalar" category="h1" buttonName="Show All" />
         <Card data={data} {...props} />
         <ButtonGroup />
-        <Progress />
       </View>
-      <Info title="Kategoriler" category="h2" buttonName="Show All" />
-      <View style={styles.listView}>
-        <ImageComponent {...props} data={brosure} />
-      </View>
+      <ImageComponent {...props} data={brosure} />
       {/* <Info title="Çok Satanlar" category="h2" buttonName="Show All" />
       <View style={styles.listView}>
         <ImageComponent {...props} data={Images} />
@@ -90,17 +116,6 @@ function HomePage(props) {
 }
 
 export default function HomeStackScreen({navigation}) {
-  const getTabBarVisibility = (route) => {
-    const routeName = route.state
-      ? route.state.routes[route.state.index].name
-      : '';
-
-    if (routeName === 'Brand') {
-      return false;
-    }
-
-    return true;
-  };
   return (
     <HomeStack.Navigator
       initialRouteName="Anasayfa"
@@ -114,7 +129,9 @@ export default function HomeStackScreen({navigation}) {
       <HomeStack.Screen
         name="Anasayfa"
         component={HomePage}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+        }}
       />
       <HomeStack.Screen name="Category" component={CategoryDetail} />
       <HomeStack.Screen
@@ -205,19 +222,24 @@ export default function HomeStackScreen({navigation}) {
 }
 const styles = StyleSheet.create({
   search: {
-    width: '80%',
-    backgroundColor: GRAY_LIGHT,
-    marginTop: '5%',
+    marginTop: 8,
+    marginHorizontal: 16,
+
   },
   listView: {
     display: 'flex',
     width: '100%',
     backgroundColor: 'white',
+    marginLeft: 24,
+    marginTop: 15,
   },
   marka: {
     borderRadius: 20,
     borderColor: '#ECEAF8',
     borderWidth: 0.1,
     backgroundColor: 'white',
+  },
+  statusBar: {
+    height: STATUSBAR_HEIGHT,
   },
 });

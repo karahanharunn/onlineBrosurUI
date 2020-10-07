@@ -43,21 +43,36 @@ export default function MyTabBar({state, descriptors, navigation}) {
         };
 
         return (
-          <TouchableOpacity key={label} style={[styles.button]} onPress={onPress}>
-            <Index
-              id={icon}
-              color={isFocused ? '#413B89' : 'black'}
-              size={isFocused ? 24 : 20}
-              active={!isFocused}
-            />
-            <TitleLight
+          <TouchableOpacity
+            key={label}
+            style={[styles.button]}
+            onPress={onPress}>
+            <View
               style={{
-                fontSize: 13,
-                color: isFocused ? '#413B89' : 'black',
-                fontFamily: isFocused ? 'OpenSans-Bold' : 'OpenSans-Regular',
+                height: 30,
+                borderRadius: 45,
+                padding: 4,
+                width: '100%',
+                backgroundColor: isFocused ? '#9B8ACA' : 'white',
+                justifyContent: 'space-evenly',
+                alignItems: 'center',
+                flexDirection: 'row',
               }}>
-              {label}
-            </TitleLight>
+              <Index
+                id={icon}
+                color={isFocused ? 'white' : '#9D9BA5'}
+                size={16}
+                active={!isFocused}
+              />
+              <TitleLight
+                style={{
+                  fontSize: 11,
+                  color: isFocused ? 'white' : '#9D9BA5',
+                  fontFamily: 'OpenSans-Regular',
+                }}>
+                {isFocused && label}
+              </TitleLight>
+            </View>
           </TouchableOpacity>
         );
       })}
