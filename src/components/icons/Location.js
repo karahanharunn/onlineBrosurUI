@@ -4,10 +4,12 @@ import Svg, {Path} from 'react-native-svg';
 function SvgLocation(props) {
   return (
     <Svg
-      className="prefix__w-6 prefix__h-6"
+      className="location_svg__w-6 location_svg__h-6"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
+      width="1em"
+      height="1em"
       {...props}>
       <Path
         strokeLinecap="round"

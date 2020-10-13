@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "reset":"react-native start --reset-cache",
+    "reset": "react-native start --reset-cache",
     "ios": "react-native run-ios",
     "start": "react-native start",
+    "devtools": "react-devtools",
     "test": "jest",
     "lint": "eslint .",
     "pod": "npx pod-install ios",
-    "loadScript": "adb reverse tcp:8081 tcp:8081",
+    "loadScript": "adb reverse tcp:8097 tcp:8097",
     "svgr": "npx svgr ./src/icons -d ./src/components/icons  --native --icon"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
     "react": "16.13.1",
     "react-native": "0.63.2",
     "react-native-fast-image": "^8.3.2",
+    "react-native-fbsdk": "^2.0.0",
     "react-native-fit-image": "^1.5.5",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-lightbox": "^0.8.1",
@@ -40,6 +42,7 @@
     "react-navigation-shared-element": "^5.0.0-alpha1",
     "react-redux": "^7.2.1",
     "react-timer-mixin": "^0.13.4",
+    "recyclerlistview": "^3.0.0",
     "redux": "^4.0.5",
     "styled-components": "^5.2.0",
     "watchman": "^1.0.0"
@@ -55,6 +58,7 @@
     "jest": "^26.4.2",
     "jetifier": "^1.6.6",
     "metro-react-native-babel-preset": "^0.63.0",
+    "react-devtools": "^4.8.2",
     "react-test-renderer": "16.13.1"
   },
   "jest": {

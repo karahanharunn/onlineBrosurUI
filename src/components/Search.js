@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import {default as Delete} from './icons/Delete';
 import {SEARCH_BACKGROUND, SEARCH_TEXT} from '../styles/colors';
-import Input from './atoms/Input';
 
 export default function Search({style, left, right, placeholder, ...rest}) {
   const [text, setText] = React.useState();

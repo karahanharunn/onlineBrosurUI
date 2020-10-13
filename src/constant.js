@@ -11,7 +11,7 @@ export const tab = [
     options: {
       tabBarIcon: 'Home',
       tabBarLabel: 'Anasayfa',
-      // tabBarVisible: false,
+      tabBarVisible: false,
     },
   },
   {

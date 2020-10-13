@@ -1,6 +1,6 @@
 import React from 'react';
-import AppNavigator from '../../navigations/app-navigator';
-import AuthNavigatorScreen from '../../navigations/auth-navigator';
+import AppNavigator from '../navigations/app-navigator';
+import AuthNavigatorScreen from '../navigations/auth-navigator';
 import {useSelector} from 'react-redux';
 
 export default function Layout(props) {

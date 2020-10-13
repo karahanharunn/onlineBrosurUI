@@ -1,15 +1,16 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import Input from '../atoms/Input';
-import Button from '../atoms/Button';
-import {LOGIN_BUTTON} from '../../styles/colors';
+import Input from './Input';
+import Button from './ButtonGroup/Button';
+import {LOGIN_BUTTON} from '../styles/colors';
 import {useDispatch} from 'react-redux';
-import setToken from '../../redux/actions/action';
-import {instance} from '../../services/AppService';
-import {tokenService} from '../../services/TokenService';
-import {AsyncStorage} from '@react-native-community/async-storage'
+import setToken from '../redux/actions/action';
+import {instance} from '../services/AppService';
+import {tokenService} from '../services/TokenService';
+import {AsyncStorage} from '@react-native-community/async-storage';
+import {LoginButton, AccessToken} from 'react-native-fbsdk';
 export default function Login() {
- const encodeBase64 = (input) => {
+  const encodeBase64 = (input) => {
     const chars =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
     let str = input;
@@ -60,20 +61,37 @@ export default function Login() {
       <Button style={styles.button} onPress={onLogin}>
         <Text style={styles.buttonText}>Login </Text>
       </Button>
+      <Text style={styles.buttonText}>Or</Text>
+      <View style={{marginTop: 10}}>
+        <LoginButton
+          onLoginFinished={(error, result) => {
+            if (error) {
+              console.log('login has error: ' + result.error);
+            } else if (result.isCancelled) {
+              console.log('login is cancelled.');
+            } else {
+              AccessToken.getCurrentAccessToken().then((data) => {
+                console.log(data.accessToken.toString());
+              });
+            }
+          }}
+          onLogoutFinished={() => console.log('logout.')}
+        />
+      </View>
     </>
   );
 }
 const styles = StyleSheet.create({
   button: {
     backgroundColor: LOGIN_BUTTON,
-    width: 200,
-    height: 44,
-    padding: 10,
+    width: 190,
+    height: 30,
     borderWidth: 1,
     borderColor: '#E41684',
-    borderRadius: 12,
+    borderRadius: 6,
     margin: 10,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonText: {
     color: 'white',

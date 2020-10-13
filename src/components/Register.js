@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import Input from '../atoms/Input';
-import Button from '../atoms/Button';
-import {LOGIN_BUTTON} from '../../styles/colors';
+import Input from './Input';
+import Button from './ButtonGroup/Button';
+import {LOGIN_BUTTON} from '../styles/colors';
 
 export default function Register() {
   const onLogin = () => {

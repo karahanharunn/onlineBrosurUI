@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import SvgUser from '../../icons/User';
-import {  SEARCH_BACKGROUND } from '../../../styles/colors';
+import SvgUser from '../icons/User';
+import {  SEARCH_BACKGROUND } from '../../styles/colors';
 
 const Profile = () => {
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import {TextInput, StyleSheet} from 'react-native';
-import { PLACEHOLDER } from '../../styles/colors';
+import { PLACEHOLDER } from '../styles/colors';
 
 export default function Input(props) {
   return (

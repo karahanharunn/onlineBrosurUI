@@ -2,8 +2,8 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import styled from 'styled-components';
 import Index from './icons/index';
-import TitleLight from './atoms/titles/TitleLight';
 import {SCALE_10} from '../styles/spacing';
+import TitleLight from './titles/TitleLight';
 const Button = styled.TouchableOpacity``;
 const BottomNavigator = styled.View`
   flex: 1;

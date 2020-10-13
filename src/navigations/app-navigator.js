@@ -1,7 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import MyTabBar from '../components/Mytab';
 import {tab} from '../constant';
+import MyTabBar from '../components/Mytab';
 
 const Tab = createBottomTabNavigator();
 

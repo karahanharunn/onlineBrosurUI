@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {LOGIN_BACKGROUND} from '../../styles/colors';
-import Button from '../../components/atoms/Button';
-import Login from '../../components/molecules/Login';
-import Register from '../../components/molecules/Register';
+import Button from '../../components/ButtonGroup/Button';
+import Login from '../../components/Login';
+import Register from '../../components/Register';
+
 
 export default function index() {
   const [page, setPage] = useState(false);

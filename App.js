@@ -5,8 +5,10 @@ import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import rootReducer from './src/redux/reducers/reducer';
 import {enableScreens} from 'react-native-screens';
-import Layout from './src/components/organisms/Layout';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Layout from './src/components/Layout';
+
+// Ignore log notification by message:
 enableScreens();
 const store = createStore(rootReducer);
 const App = (props) => {

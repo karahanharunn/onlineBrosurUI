@@ -2,39 +2,45 @@ import React from 'react';
 import {View, StyleSheet, FlatList, Dimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-import Image from '../atoms/image/Image';
+import Image from './image/Image';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const cardWith = 75;
 const cardHeight = 75;
 const Spacing = 6;
-
+const renderItem = ({item}) => (
+  <TouchableOpacity>
+    <View key={item.imageUrl} style={styles.parent}>
+      <View style={[styles.subView]}>
+        <Image
+          style={{
+            width: 45,
+            height: 45,
+            backgroundColor: 'transparent',
+          }}
+          url={item.imageUrl}
+        />
+      </View>
+    </View>
+  </TouchableOpacity>
+);
 export default function Card({data}) {
   return (
     <FlatList
       style={styles.flatList}
+      removeClippedSubviews
       data={data}
+      getItemLayout={(data, index) => ({
+        length: 45,
+        offset: 45 * index,
+        index,
+      })}
       horizontal
       showsHorizontalScrollIndicator={false}
       keyExtractor={(item) => item.name}
       snapToAlignment="start"
       snapToInterval={cardWith + Spacing}
-      renderItem={({item}) => (
-        <TouchableOpacity>
-          <View style={styles.parent}>
-            <View style={[styles.subView]}>
-              <Image
-                style={{
-                  width: 45,
-                  height: 45,
-                  backgroundColor: 'transparent',
-                }}
-                url={item.imageUrl}
-              />
-            </View>
-          </View>
-        </TouchableOpacity>
-      )}
+      renderItem={renderItem}
     />
   );
 }
@@ -44,16 +50,16 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     alignSelf: 'center',
-    marginLeft:16
+    marginLeft: 16,
   },
   parent: {
     marginRight: 15,
   },
   subView: {
     width: cardWith,
-    display:'flex',
-    justifyContent:'center',
-    alignItems:'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: cardHeight,
     borderRadius: 15,
     shadowColor: '#000',

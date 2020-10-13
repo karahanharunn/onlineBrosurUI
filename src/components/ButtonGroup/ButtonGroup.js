@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
   parent: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
     marginTop: 12,
   },
   text: {
@@ -64,6 +63,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingTop: 8,
     height: 24,
+    marginRight:8,
     borderRadius: 24,
     backgroundColor: 'white',
     borderColor: 'black',
