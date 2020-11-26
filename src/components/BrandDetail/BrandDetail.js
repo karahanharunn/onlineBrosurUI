@@ -16,23 +16,50 @@ import SvgShare from '../icons/Share';
 import SvgSearch from '../icons/Search';
 import Title from '../titles/Title';
 import TitleLight from '../titles/TitleLight';
+import {AppService} from '../../services/AppService';
+
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const SLIDER_HEIGHT = Dimensions.get('window').height;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
 const ITEM_HEIGHT = Math.round((ITEM_WIDTH * 3) / 4);
 
 export default function BrandDetail({route, navigation: {goBack}}) {
-  const {data, item} = route.params;
-  const selectedItemindex = data.findIndex(
-    (i) => i.brandName === item.brandName,
-  );
-  const [Brosure, setBrosure] = useState(data[selectedItemindex].details);
+  const {item} = route.params;
+
+  const [Brosure, setBrosure] = useState([]);
+  useEffect(() => {
+    AppService.getDetail(item.id).then((response) => {
+      setBrosure(
+        response.data.sort(function (a, b) {
+          return a.page - b.page;
+        }),
+      );
+    });
+  }, [item.id]);
+  useEffect(() => {
+    const id = AppService.getDeviceİd();
+    const body = {
+      brochureId: item.id,
+      deviceId: id,
+    };
+    async function fetchData() {
+      await AppService.brochureVisit(body);
+    }
+    fetchData();
+  }, []);
 
   const [visible, setVisible] = useState(false);
   const setShow = useCallback(() => {
     setVisible(!visible);
   }, [visible]);
-
+  const addToFavorites = async () => {
+    const id = AppService.getDeviceİd();
+    const body = {
+      brochureId: item.id,
+      deviceId: id,
+    };
+    await AppService.addtofavorites(body);
+  };
   const renderPagination = (index, total, context) => (
     <View style={[styles.paginationStyle, {top: -25}]}>
       <View
@@ -40,21 +67,26 @@ export default function BrandDetail({route, navigation: {goBack}}) {
           width: 20,
           height: 20,
           borderRadius: 20,
-          backgroundColor: 'black',
-          opacity: 0.5,
-          display: 'flex',
+          backgroundColor: 'white',
           justifyContent: 'center',
           alignItems: 'center',
+          opacity: 0.5,
+          display: 'flex',
           marginRight: 10,
         }}>
         <TouchableOpacity style={{opacity: 1}} onPress={() => goBack()}>
-          <SvgBack width={16} height={16} color="white" />
+          <SvgBack width={16} height={16} color="black" />
         </TouchableOpacity>
       </View>
-      <Text style={styles.date}>28 Eyl-01 Kas</Text>
-      <Text style={styles.paginationText}>
-        {index + 1}/{total}
-      </Text>
+      <View style={styles.row}>
+        <Text style={styles.date}>28 Eyl-01 Kas</Text>
+        <Text style={styles.date}> {item.brandName + ' ' + item.name}</Text>
+      </View>
+      <View style={{position: 'absolute', top: 5, right: 10}}>
+        <TouchableOpacity onPress={addToFavorites}>
+          <LoveButton />
+        </TouchableOpacity>
+      </View>
     </View>
   );
   return (
@@ -73,7 +105,6 @@ const Detail = React.memo(function ({
   changeVisible,
   renderPagination,
 }) {
-  console.log('girildi');
   return (
     <View
       style={{
@@ -88,7 +119,7 @@ const Detail = React.memo(function ({
       />
       <View style={styles.slide}>
         <Swiper renderPagination={renderPagination} showsButtons loop={true}>
-          {Brosure.map((item, index) => (
+          {Brosure?.map((item, index) => (
             <View key={item.imageUrl}>
               <Image
                 style={{
@@ -98,7 +129,9 @@ const Detail = React.memo(function ({
                   backgroundColor: 'transparent',
                 }}
                 url={item.imageUrl}>
-                <LoveButton active />
+                <Text style={styles.paginationText}>
+                  {item.page}/{Brosure.length}
+                </Text>
               </Image>
             </View>
           ))}
@@ -173,48 +206,39 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
   },
-
+  row: {
+    flexDirection: 'row',
+  },
   paginationStyle: {
-    justifyContent: 'center',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: 'lightgray',
     position: 'absolute',
     bottom: 20,
-    left: 5,
-    zIndex: 99,
-    height: 20,
-    right: 5,
+    top: 0,
+    left: 0,
+    height: 40,
+    right: 0,
+    paddingLeft: 10,
   },
   paginationText: {
-    backgroundColor: '#413B89',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8,
+    backgroundColor: 'black',
+    opacity: 0.6,
+    position: 'absolute',
+    bottom: 20,
+    right: 10,
+    borderRadius: 12,
     padding: 4,
     color: 'white',
     fontSize: 12,
-    marginLeft: 'auto',
+    marginLeft: 12,
   },
   date: {
-    color: 'white',
+    color: 'green',
     fontSize: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8,
     backgroundColor: 'transparent',
-    backgroundColor: '#413B89',
+    backgroundColor: 'lightgray',
     padding: 4,
   },
   container: {

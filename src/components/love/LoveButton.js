@@ -11,16 +11,12 @@ export default function LoveButton({active, children, ...rest}) {
         height: 26,
         borderRadius: 24,
         backgroundColor: 'white',
-        position: 'absolute',
-        right: 10,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         borderColor: '#EFEFF0',
         borderWidth: 1,
-        top: 20,
-      }}
-      {...rest}>
+      }}>
       {active ? (
         <SvgLoveWithBack width={14} height={14} fill="#9B8ACA" />
       ) : (

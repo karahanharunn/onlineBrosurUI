@@ -1,13 +1,7 @@
 import React, {useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
-  ScrollView,
-} from 'react-native';
+import {View, StyleSheet, TouchableHighlight, Text} from 'react-native';
 
-function Button({title, selected, changeValue}) {
+export function Button({title, selected, changeValue}) {
   return (
     <TouchableHighlight
       onPress={() => {
@@ -20,28 +14,14 @@ function Button({title, selected, changeValue}) {
     </TouchableHighlight>
   );
 }
-export default function ButtonGroup() {
-  const data = ['4.5 Üzeri', 'Yakınlarda', '30 Dakika', 'Beğenilenler'];
-  const [selected, setSelected] = useState(data[0]);
-  const changeValue = (title) => {
-    setSelected(title);
-  };
-  return (
-    <View style={styles.parent}>
-      {data.map((item) => (
-        <Button
-          key={item}
-          changeValue={changeValue}
-          selected={selected}
-          title={item}></Button>
-      ))}
-    </View>
-  );
+export default function ButtonGroup({children}) {
+  return <View style={styles.parent}>{children}</View>;
 }
 const styles = StyleSheet.create({
   parent: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-evenly',
     marginTop: 12,
   },
   text: {
@@ -63,7 +43,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingTop: 8,
     height: 24,
-    marginRight:8,
+    marginRight: 8,
     borderRadius: 24,
     backgroundColor: 'white',
     borderColor: 'black',

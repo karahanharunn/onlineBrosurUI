@@ -5,7 +5,7 @@ import Image from './image/Image';
 import LoveButton from './love/LoveButton';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const Item = ({item, index, data, navigation}) => (
+const Item = ({item, index, navigation}) => (
   <View
     key={item.brandName}
     style={{
@@ -18,7 +18,6 @@ const Item = ({item, index, data, navigation}) => (
       style={styles.button}
       onPress={() =>
         navigation.navigate('Brand', {
-          data: data,
           selectedId: item.brandName,
           item,
         })
@@ -29,8 +28,11 @@ const Item = ({item, index, data, navigation}) => (
           height: '100%',
           backgroundColor: 'transparent',
         }}
-        url={item.thumbCoverImageUrl}></Image>
-      <LoveButton />
+        url={item.coverImageUrl}
+      />
+      <View style={{position: 'absolute', top: 5, right: 5}}>
+        <LoveButton />
+      </View>
     </TouchableOpacity>
     <View
       style={{
@@ -84,9 +86,9 @@ const TextComponent = ({index, children, ...rest}) => (
   </Text>
 );
 export default function ImageComponent({data, navigation}) {
-  const renderItem = ({item}) => (
-    <Item item={item} data={data} navigation={navigation} />
-  );
+  const renderItem = ({item}) => {
+    return <Item item={item} navigation={navigation} />;
+  };
 
   return (
     <FlatList

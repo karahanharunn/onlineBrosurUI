@@ -1,14 +1,19 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Input from './Input';
 import Button from './ButtonGroup/Button';
 import {LOGIN_BUTTON} from '../styles/colors';
 import {useDispatch} from 'react-redux';
 import setToken from '../redux/actions/action';
-import {instance} from '../services/AppService';
+import {AppService, instance} from '../services/AppService';
 import {tokenService} from '../services/TokenService';
-import {AsyncStorage} from '@react-native-community/async-storage';
-import {LoginButton, AccessToken} from 'react-native-fbsdk';
+import AsyncStorage from '@react-native-community/async-storage';
+import {
+  LoginButton,
+  AccessToken,
+  GraphRequest,
+  GraphRequestManager,
+} from 'react-native-fbsdk';
 export default function Login() {
   const encodeBase64 = (input) => {
     const chars =
@@ -36,15 +41,19 @@ export default function Login() {
   };
   const dispatch = useDispatch();
   const onLogin = async () => {
-    const value = 'Basic ' + encodeBase64(`${username}:${password}`);
-
+    const value = 'Basic ' + encodeBase64(`consumer:RB,z6n}qvuJirM84`);
     tokenService.set(value);
+    await AppService.login(
+      '?email=' + username + '&ClearTextPassword=' + password,
+    );
 
     dispatch(setToken(value));
   };
-
-  const [username, setUsername] = useState('consumer');
-  const [password, setPassword] = useState('RB,z6n}qvuJirM84');
+  useEffect(() => {
+    FacebookLogin();
+  }, []);
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
   return (
     <>
       <Input
@@ -64,22 +73,79 @@ export default function Login() {
       <Text style={styles.buttonText}>Or</Text>
       <View style={{marginTop: 10}}>
         <LoginButton
-          onLoginFinished={(error, result) => {
-            if (error) {
-              console.log('login has error: ' + result.error);
-            } else if (result.isCancelled) {
-              console.log('login is cancelled.');
-            } else {
-              AccessToken.getCurrentAccessToken().then((data) => {
-                console.log(data.accessToken.toString());
-              });
-            }
-          }}
+          publishPermissions={['publish_actions']}
+          onLoginFinished={(error, result) => OnLoginFinished(error, result)}
           onLogoutFinished={() => console.log('logout.')}
         />
       </View>
     </>
   );
+
+  function OnLoginFinished(error, result) {
+    if (error) {
+      console.log('login has error: ' + result.error);
+    } else if (result.isCancelled) {
+      console.log('login is cancelled.');
+    } else {
+      console.log('girildi');
+      FacebookLogin();
+    }
+  }
+
+  function FacebookLogin() {
+    AccessToken.getCurrentAccessToken().then((data) => {
+      let accessToken = data.accessToken;
+
+      const responseInfoCallback = async (error, result) => {
+        if (error) {
+          console.log(error);
+          alert('Error fetching data: ' + error.toString());
+        } else {
+          console.log(result);
+          const id = AppService.getDeviceİd();
+
+          const value = 'Basic ' + encodeBase64(`consumer:RB,z6n}qvuJirM84`);
+          await tokenService.set(value);
+          try {
+            await AppService.createLogin(
+              `?email=${result.email}&ClearTextPassword=!Facebook123&FacebookId=${result.id}&DeviceId=${id}`,
+            );
+            await AppService.login(
+              '?email=' +
+                result.email +
+                '&ClearTextPassword=!Facebook123&FacebookId=' +
+                result.id,
+            );
+            dispatch(setToken(value));
+          } catch (error) {
+            AppService.login(
+              '?email=' +
+                result.email +
+                '&ClearTextPassword=!Facebook123&FacebookId=' +
+                result.id,
+            );
+            dispatch(setToken(value));
+          }
+        }
+      };
+
+      const infoRequest = new GraphRequest(
+        '/me',
+        {
+          accessToken: accessToken,
+          parameters: {
+            fields: {
+              string: 'email,name,first_name,middle_name,last_name',
+            },
+          },
+        },
+        responseInfoCallback,
+      );
+
+      // Start the graph request.
+      new GraphRequestManager().addRequest(infoRequest).start();
+    });
+  }
 }
 const styles = StyleSheet.create({
   button: {

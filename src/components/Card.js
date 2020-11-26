@@ -9,20 +9,11 @@ const cardWith = 75;
 const cardHeight = 75;
 const Spacing = 6;
 const renderItem = ({item}) => (
-  <TouchableOpacity>
-    <View key={item.imageUrl} style={styles.parent}>
-      <View style={[styles.subView]}>
-        <Image
-          style={{
-            width: 45,
-            height: 45,
-            backgroundColor: 'transparent',
-          }}
-          url={item.imageUrl}
-        />
-      </View>
+  <View key={item.imageUrl} style={styles.parent}>
+    <View style={[styles.subView]}>
+      <Image style={styles.image} url={item.imageUrl} />
     </View>
-  </TouchableOpacity>
+  </View>
 );
 export default function Card({data}) {
   return (
@@ -45,6 +36,12 @@ export default function Card({data}) {
   );
 }
 const styles = StyleSheet.create({
+  image: {
+    width: 45,
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   flatList: {
     overflow: 'hidden',
     width: '100%',
@@ -57,20 +54,17 @@ const styles = StyleSheet.create({
   },
   subView: {
     width: cardWith,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
     height: cardHeight,
-    borderRadius: 15,
-    shadowColor: '#000',
+    backgroundColor: 'white',
+    borderRadius: cardWith,
     shadowOffset: {
-      width: 0,
-      height: 4,
+      width: 6,
+      height: 6,
     },
-    shadowOpacity: 0.22,
+    shadowOpacity: 0.6,
     shadowRadius: 2.22,
 
-    elevation: 1,
+    elevation: 4,
   },
   brand: {
     width: 36,

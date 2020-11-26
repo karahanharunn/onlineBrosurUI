@@ -2,16 +2,16 @@ import React from 'react';
 import Menu from './scenes/Menu';
 import List from './scenes/List';
 import MyAccount from './scenes/MyAccount';
-import HomeStackScreen from './scenes/HomePage';
+import HomeTabsScreen from './scenes/HomePage';
 
 export const tab = [
   {
     name: 'Anasayfa',
-    component: HomeStackScreen,
+    component: HomeTabsScreen,
     options: {
       tabBarIcon: 'Home',
       tabBarLabel: 'Anasayfa',
-      tabBarVisible: false,
+      // tabBarVisible: false,
     },
   },
   {
