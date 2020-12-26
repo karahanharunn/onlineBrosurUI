@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import Lightbox from 'react-native-lightbox';
 import {config} from '../../services/Config';
 export default function Image({url, children, ...rest}) {
   return (

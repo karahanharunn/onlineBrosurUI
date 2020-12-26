@@ -1,23 +1,27 @@
 import React from 'react';
-import {View, StyleSheet, FlatList, Dimensions} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 
 import Image from './image/Image';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+
 const cardWith = 75;
 const cardHeight = 75;
 const Spacing = 6;
-const renderItem = ({item}) => (
-  <View key={item.imageUrl} style={styles.parent}>
-    <View style={[styles.subView]}>
-      <Image style={styles.image} url={item.imageUrl} />
-    </View>
-  </View>
-);
-export default function Card({data}) {
+
+export default function Card({data, setBrandId, ...rest}) {
+  const renderItem = ({item}) => {
+    return (
+      <View key={item.imageUrl} style={styles.parent}>
+        <View style={[styles.subView]}>
+          <TouchableOpacity onPress={() => setBrandId(item.id)}>
+            <Image style={styles.image} url={item.imageUrl} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
   return (
     <FlatList
+      {...rest}
       style={styles.flatList}
       removeClippedSubviews
       data={data}
@@ -43,7 +47,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   flatList: {
-    overflow: 'hidden',
     width: '100%',
     display: 'flex',
     alignSelf: 'center',

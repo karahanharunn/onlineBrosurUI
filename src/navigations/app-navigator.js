@@ -5,6 +5,7 @@ import HomeTabsScreen from '../scenes/HomePage';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MyTabBar from '../components/Mytab';
 import BrandDetail from '../components/BrandDetail/BrandDetail';
+import ModalSearch from '../scenes/Search';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,11 @@ export default function AppNavigator() {
       <Stack.Screen
         name="Brand"
         component={BrandDetail}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Search"
+        component={ModalSearch}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

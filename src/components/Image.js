@@ -30,9 +30,6 @@ const Item = ({item, index, navigation}) => (
         }}
         url={item.coverImageUrl}
       />
-      <View style={{position: 'absolute', top: 5, right: 5}}>
-        <LoveButton />
-      </View>
     </TouchableOpacity>
     <View
       style={{
@@ -55,23 +52,20 @@ const Item = ({item, index, navigation}) => (
         <View
           style={{
             minWidth: 70,
-            padding: 6,
+            paddingHorizontal: 6,
             height: 22,
             borderRadius: 10,
             opacity: index / 2 === 0 ? 0.5 : 0.8,
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
           }}>
           <TextComponent style={{color: 'green'}}>
             {item.brandName}
           </TextComponent>
         </View>
-        <TextComponent>
-          {item.details && item.details.length} Sayfa
-        </TextComponent>
+        <TextComponent>{item.totalPage} Sayfa</TextComponent>
       </View>
-      <TextComponent index>{item.dateMessage || 'Date Message'} </TextComponent>
+      <TextComponent index>{item.name} </TextComponent>
     </View>
   </View>
 );
@@ -85,14 +79,14 @@ const TextComponent = ({index, children, ...rest}) => (
     {children}
   </Text>
 );
-export default function ImageComponent({data, navigation}) {
+export default function ImageComponent({data, navigation, ...rest}) {
   const renderItem = ({item}) => {
     return <Item item={item} navigation={navigation} />;
   };
 
   return (
     <FlatList
-      numColumns={2}
+      {...rest}
       data={data}
       removeClippedSubviews
       showsVerticalScrollIndicator={false}

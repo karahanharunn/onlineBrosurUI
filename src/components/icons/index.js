@@ -41,3 +41,36 @@ export default function Index(props) {
       return <Search stroke={color} width={size} height={size} />;
   }
 }
+export {default as About} from './About';
+export {default as Back} from './Back';
+export {default as Bottom} from './Bottom';
+export {default as Chevron} from './Chevron';
+export {default as ChevronLeft} from './ChevronLeft';
+export {default as ChevronRight} from './ChevronRight';
+export {default as Close} from './Close';
+export {default as Delete} from './Delete';
+export {default as DotsVertical} from './DotsVertical';
+export {default as Facebook} from './Facebook';
+export {default as Favori} from './Favori';
+export {default as Home} from './Home';
+export {default as HomeBack} from './HomeBack';
+export {default as Information} from './Information';
+export {default as Instagram} from './Instagram';
+export {default as List} from './List';
+export {default as ListWithBack} from './ListWithBack';
+export {default as Location} from './Location';
+export {default as Login} from './Login';
+export {default as Love} from './Love';
+export {default as LoveWithBack} from './LoveWithBack';
+export {default as New} from './New';
+export {default as Open} from './Open';
+export {default as Paging} from './Paging';
+export {default as Previous} from './Previous';
+export {default as Right} from './Right';
+export {default as Search} from './Search';
+export {default as Settings} from './Settings';
+export {default as Share} from './Share';
+export {default as Twitter} from './Twitter';
+export {default as User} from './User';
+export {default as UserWithBack} from './UserWithBack';
+export {default as Whatsapp} from './Whatsapp';

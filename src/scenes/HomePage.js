@@ -1,29 +1,28 @@
 import React, {useState, useEffect} from 'react';
-import {Easing, View, StyleSheet, StatusBar, Platform} from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
-import BrandDetail from '../components/BrandDetail/BrandDetail';
+import {View, StyleSheet, FlatList, Dimensions} from 'react-native';
+
 import Card from '../components/Card';
 import ButtonGroup from '../components/ButtonGroup/ButtonGroup';
-import {useSelector} from 'react-redux';
 import {AppService} from '../services/AppService';
-import {SEARCH_LOCATION, LOGIN_BACKGROUND} from '../styles/colors';
+import {SEARCH_LOCATION} from '../styles/colors';
 
-import Search from '../components/Search';
-import SvgLocation from '../components/icons/Location';
 import Index from '../components/icons';
-import Profile from '../components/profile';
 import FlexRow from '../components/FlexRow/FlexRow';
 import ImageComponent from '../components/Image';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {Button} from '../components/ButtonGroup/ButtonGroup';
 import useSelect from '../hooks/useSelect';
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
+import StatusBar from '../components/atoms/StatusBar';
+import Logo from '../components/Logo';
 
+const width = Dimensions.get('window').width;
 const HomeStack = createSharedElementStackNavigator();
 function HomePage(props) {
   const [data, setData] = useState();
   const [brosure, setBrosure] = useState();
+  const [brandId, setBrandId] = useState();
+  const [SearchText, setSearchText] = useState();
   const [filters, setFilters] = useState();
   const [selected, changeValue, key] = useSelect();
   useEffect(() => {
@@ -43,23 +42,26 @@ function HomePage(props) {
         setBrosure(response.data.brochures);
       });
   }, [key]);
+
+  useEffect(() => {
+    if (brandId > 0) {
+      AppService.getBrosureWithBrandId(brandId).then((response) => {
+        response.data.length > 0 && setBrosure(response.data);
+      });
+    }
+  }, [brandId]);
+  const changeBrandId = (id) => setBrandId(id);
+  console.log(brandId);
   return (
     <View
       style={{
         flex: 1,
         alignItems: 'center',
-        overflow: 'scroll',
         backgroundColor: 'white',
       }}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="white"
-        style={styles.statusBar}
-      />
-
       {/* <Search /> */}
-      <ScrollView style={styles.w100}>
-        <FlexRow>
+      <StatusBar />
+      {/* <FlexRow>
           <Search
             placeholder="Location"
             left={
@@ -74,44 +76,53 @@ function HomePage(props) {
             style={styles.search}
           />
           <Profile />
-        </FlexRow>
-        <FlexRow
-          style={{
-            paddingHorizontal: 16,
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Search
+        </FlexRow> */}
+      <FlexRow
+        style={{
+          padding: 16,
+          marginTop: 8,
+          width,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingTop: 0,
+        }}>
+        <Logo />
+        {/* <Search
+            setSearchText={setSearchText}
             style={{
               paddingHorizontal: 6,
+              paddingLeft: 12,
               borderRadius: 12,
               backgroundColor: 'white',
               borderWidth: 1,
               borderRightWidth: 0,
               borderColor: '#EFEFF0',
             }}
-            placeholder="Search here..."
+            placeholder="Broşür Ara..."
             right={
-              <View
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 10,
-                  backgroundColor: SEARCH_LOCATION,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Index id="Search" color={'white'} size="20" />
-              </View>
+             
             }
-          />
-        </FlexRow>
+          /> */}
+        <TouchableOpacity onPress={() => props.navigation.navigate('Search')}>
+          <View
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: 6,
+              backgroundColor: SEARCH_LOCATION,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Index id="Search" color={'white'} size="16" />
+          </View>
+        </TouchableOpacity>
+      </FlexRow>
+      <VirtualizedView>
         <View style={[styles.listView, styles.marka]}>
-          <Card data={data} {...props} />
+          <Card setBrandId={changeBrandId} data={data} {...props} />
           <ButtonGroup>
             {filters?.map((item) => (
               <Button
@@ -123,8 +134,8 @@ function HomePage(props) {
             ))}
           </ButtonGroup>
         </View>
-        <ImageComponent {...props} data={brosure} />
-      </ScrollView>
+        <ImageComponent numColumns={2} {...props} data={brosure} />
+      </VirtualizedView>
     </View>
   );
 }
@@ -157,10 +168,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   listView: {
+    width: width,
     display: 'flex',
-    width: '100%',
     backgroundColor: 'white',
-    marginTop: 15,
+    marginTop: 10,
   },
   marka: {
     borderRadius: 20,
@@ -168,8 +179,19 @@ const styles = StyleSheet.create({
     borderWidth: 0.1,
     backgroundColor: 'white',
   },
-  statusBar: {
-    height: STATUSBAR_HEIGHT,
-  },
-  w100: {width: '100%'},
 });
+
+function VirtualizedView(props) {
+  return (
+    <FlatList
+      data={[]}
+      ListEmptyComponent={null}
+      showsVerticalScrollIndicator={false}
+      keyExtractor={() => 'dummy'}
+      renderItem={null}
+      ListHeaderComponent={() => (
+        <React.Fragment>{props.children}</React.Fragment>
+      )}
+    />
+  );
+}

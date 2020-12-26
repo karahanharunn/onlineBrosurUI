@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import Input from './Input';
 import Button from './ButtonGroup/Button';
 import {LOGIN_BUTTON} from '../styles/colors';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import setToken from '../redux/actions/action';
 import {AppService, instance} from '../services/AppService';
 import {tokenService} from '../services/TokenService';
@@ -14,7 +14,7 @@ import {
   GraphRequest,
   GraphRequestManager,
 } from 'react-native-fbsdk';
-export default function Login() {
+export default function Login(props) {
   const encodeBase64 = (input) => {
     const chars =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
@@ -39,10 +39,12 @@ export default function Login() {
 
     return output;
   };
+  const userToken = useSelector((state) => state.userToken);
+  useEffect(() => {
+    if (!!userToken) props.navigation.navigate('App');
+  }, [userToken]);
   const dispatch = useDispatch();
   const onLogin = async () => {
-    const value = 'Basic ' + encodeBase64(`consumer:RB,z6n}qvuJirM84`);
-    tokenService.set(value);
     await AppService.login(
       '?email=' + username + '&ClearTextPassword=' + password,
     );
@@ -59,18 +61,17 @@ export default function Login() {
       <Input
         value={username}
         onChangeText={(username) => setUsername(username)}
-        placeholder={'Username'}
+        placeholder={'Kullanıcı Adı'}
       />
       <Input
         value={password}
         onChangeText={(password) => setPassword(password)}
-        placeholder={'Password'}
+        placeholder={'Şifre'}
         secureTextEntry={true}
       />
       <Button style={styles.button} onPress={onLogin}>
-        <Text style={styles.buttonText}>Login </Text>
+        <Text style={styles.buttonText}>Giriş Yap </Text>
       </Button>
-      <Text style={styles.buttonText}>Or</Text>
       <View style={{marginTop: 10}}>
         <LoginButton
           publishPermissions={['publish_actions']}

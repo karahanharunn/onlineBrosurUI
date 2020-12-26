@@ -1,64 +1,69 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Keyboard,
   View,
   TextInput,
   StyleSheet,
   TouchableHighlight,
+  KeyboardAvoidingView,
+  BackHandler,
 } from 'react-native';
 import {default as Delete} from './icons/Delete';
 import {SEARCH_BACKGROUND, SEARCH_TEXT} from '../styles/colors';
 
-export default function Search({style, left, right, placeholder, ...rest}) {
-  const [text, setText] = React.useState();
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+export default function Search({
+  style,
+  left,
+  right,
+  setSearchText,
+  placeholder,
+  setText,
+  text,
+  onChangeText,
+  ...rest
+}) {
 
+  const textInputReference = useRef(null);
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true); // or some other action
-      },
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false); // or some other action
-      },
-    );
-
+    textInputReference.current.focus();
     return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
+      textInputReference.current.clear();
     };
   }, []);
-
   return (
-    <View {...rest} style={[styles.searchSection, style]}>
-      <View
-        style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-        {left}
-        <TextInput
-          style={[styles.input]}
-          placeholder={placeholder}
-          onChangeText={(e) => setText(e)}
-          value={text}
-          onSubmitEditing={Keyboard.dismiss}
-        />
-      </View>
-      {text ? (
-        <TouchableHighlight onPress={(e) => setText(null)}>
-          <Delete
-            width={16}
-            height={16}
-            color={SEARCH_TEXT}
-            fill={SEARCH_TEXT}
+    <KeyboardAvoidingView
+      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <View {...rest} style={[styles.searchSection, style]}>
+        <View
+          style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+          {left}
+          <TextInput
+            ref={textInputReference}
+            style={[styles.input]}
+            placeholder={placeholder}
+            onChangeText={onChangeText}
+            value={text}
+            onSubmitEditing={Keyboard.dismiss}
           />
-        </TouchableHighlight>
-      ) : (
-        right
-      )}
-    </View>
+        </View>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {!!text && (
+            <TouchableHighlight
+              style={{marginRight: 12}}
+              onPress={() => setText(null)}>
+              <Delete
+                width={20}
+                height={20}
+                color={SEARCH_TEXT}
+                fill={SEARCH_TEXT}
+              />
+            </TouchableHighlight>
+          )}
+          {right}
+        </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({
@@ -69,10 +74,22 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: SEARCH_BACKGROUND,
     borderRadius: 36,
-    paddingHorizontal: 12,
-    flex: 1,
+    paddingRight: 0,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 0.4,
   },
   input: {
     color: SEARCH_TEXT,
+    paddingLeft: 6,
+  },
+  container: {
+    flex: 1,
   },
 });

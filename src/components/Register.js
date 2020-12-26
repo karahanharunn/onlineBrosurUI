@@ -50,22 +50,22 @@ export default function Register() {
       <Input
         value={username}
         onChangeText={(username) => setUsername(username)}
-        placeholder={'Username'}
+        placeholder={'Kullanıcı Adı'}
       />
       <Input
         value={password}
         onChangeText={(password) => setPassword(password)}
-        placeholder={'Password'}
+        placeholder={'Şifre'}
         secureTextEntry={true}
       />
       <Input
         value={confirmPassword}
         onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
-        placeholder={'Confirm Password'}
+        placeholder={'Onayla'}
         secureTextEntry={true}
       />
       <Button style={styles.button} onPress={onLogin}>
-        <Text style={styles.buttonText}>Create </Text>
+        <Text style={styles.buttonText}>Hesap Oluştur </Text>
       </Button>
     </>
   );

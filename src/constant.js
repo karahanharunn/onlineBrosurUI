@@ -16,18 +16,19 @@ export const tab = [
   },
   {
     name: 'Menü',
-    component: Menu,
+    component: List,
+
     options: {
       tabBarIcon: 'Menu',
-      tabBarLabel: 'Menü',
+      tabBarLabel: 'Listem',
     },
   },
   {
     name: 'Listem',
-    component: List,
+    component: Menu,
     options: {
       tabBarIcon: 'List',
-      tabBarLabel: 'Listem',
+      tabBarLabel: 'Favoriler',
     },
   },
   {
@@ -38,4 +39,14 @@ export const tab = [
       tabBarLabel: 'Hesabım',
     },
   },
+];
+export const Tabs = [
+  {name: 'Tüm Sonuçlar', id: 1, ref: React.createRef(), tab: 'all'},
+  {
+    name: 'Markalar',
+    tab: 'brands',
+    id: 3,
+    ref: React.createRef(),
+  },
+  {name: 'Broşürler', tab: 'brochures', id: 2, ref: React.createRef()},
 ];

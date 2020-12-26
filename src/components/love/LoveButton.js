@@ -14,8 +14,6 @@ export default function LoveButton({active, children, ...rest}) {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: '#EFEFF0',
-        borderWidth: 1,
       }}>
       {active ? (
         <SvgLoveWithBack width={14} height={14} fill="#9B8ACA" />

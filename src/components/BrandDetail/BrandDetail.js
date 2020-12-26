@@ -1,22 +1,39 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {View, StyleSheet, Dimensions, Text, StatusBar} from 'react-native';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Text,
+  StatusBar,
+  FlatList,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {SCALE_12, SCALE_10} from '../../styles/spacing';
 import Button from '../ButtonGroup/Button';
 import Column from '../column/Column';
 
 import Swiper from 'react-native-swiper';
 import Image from '../image/Image';
-import {SEARCH_BACKGROUND, GRAY_MEDIUM} from '../../styles/colors';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import Lightbox from 'react-native-lightbox';
+import {GRAY_DARK, GRAY_LIGHT, SEARCH_BACKGROUND} from '../../styles/colors';
 import LoveButton from '../love/LoveButton';
-import SvgBack from '../icons/Back';
-import SvgOpen from '../icons/Open';
-import SvgShare from '../icons/Share';
-import SvgSearch from '../icons/Search';
+
 import Title from '../titles/Title';
 import TitleLight from '../titles/TitleLight';
 import {AppService} from '../../services/AppService';
+import ModalComponent from '../atoms/ModalComponent';
+import OpenUrlButton from '../atoms/OpenUrlButton';
+import {
+  Back,
+  Facebook,
+  Instagram,
+  Open,
+  Paging,
+  Previous,
+  Whatsapp,
+} from '../icons';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import Header from '../header/Header';
+import Logo from '../Logo';
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const SLIDER_HEIGHT = Dimensions.get('window').height;
@@ -27,6 +44,7 @@ export default function BrandDetail({route, navigation: {goBack}}) {
   const {item} = route.params;
 
   const [Brosure, setBrosure] = useState([]);
+  const [checkFavorite, setCheckFavorite] = useState([]);
   useEffect(() => {
     AppService.getDetail(item.id).then((response) => {
       setBrosure(
@@ -38,73 +56,87 @@ export default function BrandDetail({route, navigation: {goBack}}) {
   }, [item.id]);
   useEffect(() => {
     const id = AppService.getDeviceİd();
+    console.log(id);
     const body = {
       brochureId: item.id,
       deviceId: id,
     };
     async function fetchData() {
-      await AppService.brochureVisit(body);
+      AppService.brochureVisit(body);
+      const response = await AppService.checkFavorites(body);
+      setCheckFavorite(response.data.data);
     }
     fetchData();
   }, []);
 
-  const [visible, setVisible] = useState(false);
-  const setShow = useCallback(() => {
-    setVisible(!visible);
-  }, [visible]);
-  const addToFavorites = async () => {
+  const changeFavorites = async () => {
     const id = AppService.getDeviceİd();
     const body = {
       brochureId: item.id,
       deviceId: id,
     };
-    await AppService.addtofavorites(body);
+    if (!checkFavorite) {
+      await AppService.addtofavorites(body);
+      return setCheckFavorite(true);
+    } else {
+      await AppService.deletefavorite(body);
+      return setCheckFavorite(false);
+    }
   };
   const renderPagination = (index, total, context) => (
     <View style={[styles.paginationStyle, {top: -25}]}>
-      <View
-        style={{
-          width: 20,
-          height: 20,
-          borderRadius: 20,
-          backgroundColor: 'white',
-          justifyContent: 'center',
-          alignItems: 'center',
-          opacity: 0.5,
-          display: 'flex',
-          marginRight: 10,
-        }}>
-        <TouchableOpacity style={{opacity: 1}} onPress={() => goBack()}>
-          <SvgBack width={16} height={16} color="black" />
+      <Header>
+        <TouchableOpacity onPress={() => goBack()} style={{opacity: 1}}>
+          <Previous width={16} height={16} fill="black" />
         </TouchableOpacity>
-      </View>
+      </Header>
       <View style={styles.row}>
         <Text style={styles.date}>28 Eyl-01 Kas</Text>
         <Text style={styles.date}> {item.brandName + ' ' + item.name}</Text>
       </View>
       <View style={{position: 'absolute', top: 5, right: 10}}>
-        <TouchableOpacity onPress={addToFavorites}>
-          <LoveButton />
+        <TouchableOpacity onPress={changeFavorites}>
+          <LoveButton active={checkFavorite} />
         </TouchableOpacity>
       </View>
     </View>
   );
-  return (
-    <Detail
-      renderPagination={renderPagination}
-      visible={visible}
-      changeVisible={setShow}
-      Brosure={Brosure}
-    />
-  );
+  return <Detail renderPagination={renderPagination} Brosure={Brosure} />;
 }
 
 const Detail = React.memo(function ({
   Brosure,
-  visible,
-  changeVisible,
+
   renderPagination,
 }) {
+  const swiperScroll = useRef();
+  const [visible, setVisible] = useState(false);
+  const [description, setDescription] = useState(false);
+  const [share, setShare] = useState(false);
+  const [search, setSearch] = useState(false);
+  const [ActiveBrosur, setActiveBrosur] = useState();
+  //Animation
+  const setShow = useCallback(() => {
+    setVisible(false);
+    setDescription(false);
+    setSearch(false);
+    setShare(false);
+  }, [visible]);
+  const showDescription = useCallback(() => {
+    setDescription(true);
+    setVisible(true);
+  }, [description]);
+  const showShare = useCallback(() => {
+    setShare(true);
+    setVisible(true);
+  }, [share]);
+  const showSearch = useCallback(() => {
+    setVisible(true);
+    setSearch(true);
+  }, [search]);
+  useEffect(() => {
+    swiperScroll.current.scrollTo(ActiveBrosur);
+  }, [ActiveBrosur]);
   return (
     <View
       style={{
@@ -118,88 +150,206 @@ const Detail = React.memo(function ({
         style={styles.statusBar}
       />
       <View style={styles.slide}>
-        <Swiper renderPagination={renderPagination} showsButtons loop={true}>
+        <Swiper
+          ref={swiperScroll}
+          renderPagination={renderPagination}
+          showsButtons
+          loop={true}>
           {Brosure?.map((item, index) => (
             <View key={item.imageUrl}>
-              <Image
-                style={{
-                  width: SLIDER_WIDTH,
-                  height: '100%',
-                  position: 'relative',
-                  backgroundColor: 'transparent',
-                }}
-                url={item.imageUrl}>
-                <Text style={styles.paginationText}>
-                  {item.page}/{Brosure.length}
-                </Text>
-              </Image>
+              <TouchableWithoutFeedback onPress={() => setShow(false)}>
+                <Image
+                  style={{
+                    width: SLIDER_WIDTH,
+                    height: '100%',
+                    position: 'relative',
+                    backgroundColor: 'transparent',
+                  }}
+                  url={item.imageUrl}>
+                  <Text style={styles.paginationText}>
+                    {item.page}/{Brosure.length}
+                  </Text>
+                </Image>
+              </TouchableWithoutFeedback>
             </View>
           ))}
         </Swiper>
       </View>
       <View
-        style={[
-          styles.info,
-          {
-            bottom: visible === false ? -270 : 0,
-            borderTopLeftRadius: visible === false ? 0 : 40,
-            borderTopRightRadius: visible === false ? 0 : 40,
-          },
-        ]}>
-        <Column>
-          <View
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-between',
+          flexDirection: 'row',
+          alignItems: 'center',
+          position: 'absolute',
+          height: 25,
+          bottom: 8,
+          paddingHorizontal: 25,
+        }}>
+        <Logo />
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            key="Search"
             style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'space-evenly',
-              flexDirection: 'row',
-            }}>
-            <TouchableOpacity
-              key="Search"
-              style={{display: visible === true ? 'none' : 'flex'}}
-              onPress={changeVisible}>
-              <SvgSearch width={16} height={16} color="#9B8ACA" />
-            </TouchableOpacity>
-            <TouchableOpacity key="Open" onPress={changeVisible}>
-              <SvgOpen width={16} height={16} color="#9B8ACA" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              key="Share"
-              style={{display: visible === true ? 'none' : 'flex'}}
-              onPress={changeVisible}>
-              <SvgShare width={16} height={16} color="#9B8ACA" />
-            </TouchableOpacity>
-          </View>
-
-          <Title style={{paddingLeft: 32}}>Description</Title>
-          <View
-            style={{
-              paddingLeft: 32,
-              marginTop: 12,
-              borderLeftWidth: 3,
-              borderLeftColor: '#F2F2F2',
-            }}>
-            <TitleLight>
-              Dean on Branding presents in a compact form the twenty essential
-              principles Dean on Branding presents in a compact form the twenty
-              essential principles
-            </TitleLight>
-          </View>
-          <View style={{flexDirection: 'row', marginTop: 'auto'}}>
-            <Button style={[styles.button, {flex: 1}]}>Kaydet</Button>
-          </View>
-        </Column>
+              display: visible === true ? 'none' : 'flex',
+              marginRight: 16,
+            }}
+            onPress={showSearch}>
+            <Paging width={16} height={16} fill="black" />
+          </TouchableOpacity>
+          <TouchableOpacity key="Open" onPress={showDescription}>
+            <Open width={16} height={16} color="black" />
+          </TouchableOpacity>
+        </View>
       </View>
+      <ModalComponent
+        setShow={setShow}
+        setVisible={() => setVisible(!visible)}
+        visible={visible}
+        height={270}>
+        <Column>
+          <Description visible={description} />
+          <BrosureList
+            changeActiveBrosur={setActiveBrosur}
+            visible={search}
+            Brosure={Brosure}
+            ActiveBrosur={ActiveBrosur}
+          />
+        </Column>
+      </ModalComponent>
     </View>
   );
 });
+function BrosureList({visible, Brosure, changeActiveBrosur, ActiveBrosur}) {
+  const flatlistRef = useRef();
+  useEffect(() => {
+    if (ActiveBrosur)
+      flatlistRef.current.scrollToIndex({
+        animated: true,
+        index: ActiveBrosur - 1,
+      });
+  }, [ActiveBrosur]);
+  if (visible === false) return <View />;
+  const renderItem = (item) => {
+    return (
+      <View style={{display: 'flex', alignItems: 'center'}}>
+        <Text style={{color: 'white', fontSize: 10}}>{item.item.page}</Text>
+        <TouchableOpacity onPress={() => changeActiveBrosur(item.item.page)}>
+          <Image
+            style={{
+              width: 70,
+              height: '100%',
+              marginRight: 10,
+              marginTop: 0,
+              backgroundColor: 'transparent',
+            }}
+            url={item.item.imageUrl}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  return (
+    <View
+      style={{
+        flex: 1,
+        height: 120,
+        marginTop: 10,
+      }}>
+      <FlatList
+        data={Brosure}
+        removeClippedSubviews
+        showsVerticalScrollIndicator={false}
+        horizontal
+        nestedScrollEnabled={false}
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+        keyExtractor={(item) => item.page}
+        renderItem={renderItem}
+        ref={flatlistRef}
+      />
+    </View>
+  );
+}
+
+function Description({visible}) {
+  if (visible === false) return <View />;
+  return (
+    <View
+      style={{
+        flex: 1,
+        height: 230,
+        paddingTop: 10,
+        zIndex: 99,
+        backgroundColor: 'white',
+        width: SLIDER_WIDTH,
+      }}>
+      <Title style={{paddingLeft: 32}}>Description</Title>
+      <View
+        style={{
+          paddingLeft: 32,
+          marginTop: 12,
+          borderLeftWidth: 3,
+          borderLeftColor: '#F2F2F2',
+        }}>
+        <TitleLight>
+          Dean on Branding presents in a compact form the twenty essential
+          principles Dean on Branding presents in a compact form the twenty
+          essential principles
+        </TitleLight>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: 'auto',
+          marginBottom: 12,
+          marginLeft: 6,
+        }}>
+        <Button style={[styles.button, {flex: 1}]}>Kaydet</Button>
+      </View>
+    </View>
+  );
+}
+function ShareComponent({visible}) {
+  const text = 'Deneme';
+
+  if (visible === false) return <View />;
+  return (
+    <View style={{flex: 1, height: 50}}>
+      <View
+        style={{
+          paddingLeft: 12,
+          marginTop: 12,
+          borderLeftWidth: 3,
+          borderLeftColor: '#F2F2F2',
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+        }}>
+        <TitleLight style={{color: 'white'}}> Broşürü Paylaş</TitleLight>
+        <View style={{flexDirection: 'row'}}>
+          <OpenUrlButton url={`whatsapp://send?text=${text}`}>
+            <Whatsapp width={32} height={32} />
+          </OpenUrlButton>
+          <OpenUrlButton url={`whatsapp://send?text=${text}`}>
+            <Facebook width={32} height={32} />
+          </OpenUrlButton>
+          <OpenUrlButton url={`whatsapp://send?text=${text}`}>
+            <Instagram width={32} height={32} />
+          </OpenUrlButton>
+        </View>
+      </View>
+    </View>
+  );
+}
 const styles = StyleSheet.create({
   slide: {
     width: SLIDER_WIDTH,
     height: undefined,
     flex: 1,
     marginTop: 30,
-    marginBottom: 20,
+    marginBottom: 30,
   },
   text: {
     color: '#fff',
@@ -209,11 +359,12 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
+
   paginationStyle: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'lightgray',
+    backgroundColor: 'white',
     position: 'absolute',
     bottom: 20,
     top: 0,
@@ -235,10 +386,10 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   date: {
-    color: 'green',
+    color: '#9B8ACA',
     fontSize: 12,
     backgroundColor: 'transparent',
-    backgroundColor: 'lightgray',
+    backgroundColor: 'white',
     padding: 4,
   },
   container: {
@@ -255,14 +406,7 @@ const styles = StyleSheet.create({
     width: SLIDER_WIDTH,
     height: 'auto',
   },
-  info: {
-    backgroundColor: 'white',
-    height: 300,
-    position: 'absolute',
-    bottom: 0,
-    borderTopWidth: 1,
-    borderColor: GRAY_MEDIUM,
-  },
+
   button: {
     backgroundColor: '#9B8ACA',
     elevation: 8,
