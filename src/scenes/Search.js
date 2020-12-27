@@ -12,7 +12,7 @@ import Image from '../components/image/Image';
 import Search from '../components/Search';
 import {AppService} from '../services/AppService';
 import CustomTab from '../components/CustomTab';
-import { Tabs } from '../constant';
+import {Tabs} from '../constant';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
@@ -23,6 +23,13 @@ export default function ModalSearch({navigation}) {
   const implementSearchText = (e) => {
     setText(e);
   };
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+
+    });
+
+    return unsubscribe;
+  }, [navigation]);
   useEffect(() => {
     AppService.search(text).then((response) => {
       setResult({
@@ -122,7 +129,7 @@ export default function ModalSearch({navigation}) {
       <Animated.FlatList
         ref={ref}
         data={Tabs}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
         pagingEnabled
@@ -143,7 +150,6 @@ export default function ModalSearch({navigation}) {
         )}
         bounces={false}
         renderItem={({item}) => {
-          console.log(item.tab);
           return (
             <View style={{width, height, top: 120}}>
               {Result && (
@@ -195,7 +201,7 @@ export default function ModalSearch({navigation}) {
         </View>
       </View>
 
-      <CustomTab  onItemPress={onItemPress} scrollX={scrollX} data={Tabs} />
+      <CustomTab onItemPress={onItemPress} scrollX={scrollX} data={Tabs} />
     </View>
   );
 }

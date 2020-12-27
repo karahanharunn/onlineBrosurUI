@@ -1,11 +1,11 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import {SET_TOKEN} from '../constants/action-types';
-
 
 const initialState = {
   title: 'Markalar',
   isLoading: true,
   isSignout: false,
-  userToken: null,
+  userToken: AsyncStorage.getItem('token') || null,
 };
 function rootReducer(state = initialState, action) {
   switch (action.type) {

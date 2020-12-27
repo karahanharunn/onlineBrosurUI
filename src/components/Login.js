@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Input from './Input';
 import Button from './ButtonGroup/Button';
-import {LOGIN_BUTTON} from '../styles/colors';
+import {LOGIN_BUTTON, PLACEHOLDER} from '../styles/colors';
 import {useDispatch, useSelector} from 'react-redux';
 import setToken from '../redux/actions/action';
 import {AppService, instance} from '../services/AppService';
@@ -45,17 +45,24 @@ export default function Login(props) {
   }, [userToken]);
   const dispatch = useDispatch();
   const onLogin = async () => {
-    await AppService.login(
+    const response = await AppService.login(
       '?email=' + username + '&ClearTextPassword=' + password,
     );
 
-    dispatch(setToken(value));
+    if (response.status === 200 && response.data.result.status !== 2) {
+      const value = 'Basic ' + encodeBase64(`consumer:RB,z6n}qvuJirM84`);
+      dispatch(setToken(value));
+      AsyncStorage.setItem('token', value);
+    }
+    if (response.data.result.status === 2)
+      setMessage(response.data.result.message);
   };
   useEffect(() => {
     FacebookLogin();
   }, []);
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
+  const [message, setMessage] = useState();
   return (
     <>
       <Input
@@ -69,6 +76,11 @@ export default function Login(props) {
         placeholder={'Şifre'}
         secureTextEntry={true}
       />
+      {message && (
+        <Text style={{fontSize: 10, color: PLACEHOLDER, paddingVertical: 10}}>
+          {message}
+        </Text>
+      )}
       <Button style={styles.button} onPress={onLogin}>
         <Text style={styles.buttonText}>Giriş Yap </Text>
       </Button>
@@ -95,12 +107,11 @@ export default function Login(props) {
 
   function FacebookLogin() {
     AccessToken.getCurrentAccessToken().then((data) => {
-      let accessToken = data.accessToken;
+      let accessToken = data?.accessToken;
 
       const responseInfoCallback = async (error, result) => {
         if (error) {
           console.log(error);
-          alert('Error fetching data: ' + error.toString());
         } else {
           console.log(result);
           const id = AppService.getDeviceİd();

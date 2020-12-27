@@ -22,7 +22,6 @@ function HomePage(props) {
   const [data, setData] = useState();
   const [brosure, setBrosure] = useState();
   const [brandId, setBrandId] = useState();
-  const [SearchText, setSearchText] = useState();
   const [filters, setFilters] = useState();
   const [selected, changeValue, key] = useSelect();
   useEffect(() => {
@@ -51,7 +50,6 @@ function HomePage(props) {
     }
   }, [brandId]);
   const changeBrandId = (id) => setBrandId(id);
-  console.log(brandId);
   return (
     <View
       style={{

@@ -8,7 +8,6 @@ import {GRAY_DARK} from '../styles/colors';
 
 export default function List({navigation}) {
   const userToken = useSelector((state) => state.userToken);
-  console.log(userToken, 'giildi');
   if (!!userToken === false)
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

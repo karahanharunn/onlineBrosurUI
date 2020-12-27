@@ -22,7 +22,6 @@ export default function Search({
   onChangeText,
   ...rest
 }) {
-
   const textInputReference = useRef(null);
   useEffect(() => {
     textInputReference.current.focus();

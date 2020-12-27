@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Input from './Input';
 import Button from './ButtonGroup/Button';
-import {LOGIN_BUTTON} from '../styles/colors';
+import {LOGIN_BUTTON, PLACEHOLDER} from '../styles/colors';
 import {tokenService} from '../services/TokenService';
 import {AppService} from '../services/AppService';
 
@@ -31,27 +31,39 @@ export default function Register() {
 
     return output;
   };
+  function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
   const onLogin = async () => {
+    setClicked(true);
     if (password === confirmPassword) {
       const value = 'Basic ' + encodeBase64(`consumer:RB,z6n}qvuJirM84`);
       tokenService.set(value);
       const id = AppService.getDeviceİd();
 
-      const response = await AppService.createLogin(
-        `?email=${username}&ClearTextPassword=${password}&DeviceId=${id}`,
-      );
+      validateEmail(username) &&
+        (await AppService.createLogin(
+          `?email=${username}&ClearTextPassword=${password}&DeviceId=${id}`,
+        ));
     }
   };
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [clicked, setClicked] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   return (
     <>
       <Input
         value={username}
         onChangeText={(username) => setUsername(username)}
-        placeholder={'Kullanıcı Adı'}
+        placeholder={'Email'}
       />
+      {!validateEmail(username) && clicked && (
+        <Text style={{fontSize: 10, color: PLACEHOLDER, paddingVertical: 10}}>
+          Lütfen geçerli bir email adresi giriniz.
+        </Text>
+      )}
       <Input
         value={password}
         onChangeText={(password) => setPassword(password)}
@@ -64,6 +76,11 @@ export default function Register() {
         placeholder={'Onayla'}
         secureTextEntry={true}
       />
+      {password !== confirmPassword && clicked && (
+        <Text style={{fontSize: 10, color: PLACEHOLDER, paddingVertical: 10}}>
+          Şifreleriniz eşleşmiyor.
+        </Text>
+      )}
       <Button style={styles.button} onPress={onLogin}>
         <Text style={styles.buttonText}>Hesap Oluştur </Text>
       </Button>
@@ -80,7 +97,6 @@ const styles = StyleSheet.create({
     borderColor: '#E41684',
     borderRadius: 12,
     margin: 10,
-    alignItems: 'center',
   },
   buttonText: {
     color: 'white',

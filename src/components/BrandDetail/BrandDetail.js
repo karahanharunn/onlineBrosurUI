@@ -47,16 +47,17 @@ export default function BrandDetail({route, navigation: {goBack}}) {
   const [checkFavorite, setCheckFavorite] = useState([]);
   useEffect(() => {
     AppService.getDetail(item.id).then((response) => {
-      setBrosure(
-        response.data.sort(function (a, b) {
-          return a.page - b.page;
-        }),
-      );
+      response.data.length > 0
+        ? setBrosure(
+            response.data.sort(function (a, b) {
+              return a.page - b.page;
+            }),
+          )
+        : setBrosure(item.details);
     });
   }, [item.id]);
   useEffect(() => {
     const id = AppService.getDeviceİd();
-    console.log(id);
     const body = {
       brochureId: item.id,
       deviceId: id,

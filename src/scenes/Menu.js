@@ -5,25 +5,28 @@ import Image from '../components/image/Image';
 import {AppService} from '../services/AppService';
 import {GRAY_MEDIUM} from '../styles/colors';
 
-export default function Menu(props) {
+export default function Menu({navigation}) {
   const [Brosure, setBrosure] = useState();
-  useEffect(() => {
+
+  React.useEffect(() => {
     const id = AppService.getDeviceİd();
 
     async function fetchData() {
       const response = await AppService.getFavorites(id);
       setBrosure(response.data);
     }
-    fetchData();
-    return () => {
-      setBrosure(null);
-    };
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
         onPress={() =>
-          props.navigation.navigate('Brand', {
+          navigation.navigate('Brand', {
             selectedId: item.name,
             item,
           })
@@ -34,15 +37,17 @@ export default function Menu(props) {
             flex: 1,
             flexDirection: 'row',
             padding: 5,
-            paddingVertical:15,
+            paddingVertical: 10,
+            marginVertical: 5,
             shadowColor: '#000',
             shadowOffset: {
               width: 0,
-              height: 9,
+              height: 1,
             },
-            shadowOpacity: 0.48,
-            shadowRadius: 11.95,
-            elevation: 18,
+            shadowOpacity: 0.2,
+            shadowRadius: 1.41,
+
+            elevation: 1,
           }}>
           <View style={{width: 120}}>
             <Image url={item.coverImageUrl} style={{width: 140, height: 90}} />
@@ -71,7 +76,7 @@ export default function Menu(props) {
           Favori Broşürlerinizi Bu Sekme Altında Görüntüleyebilirsiniz.
         </Text>
       </View>
-      <View style={{backgroundColor: 'white'}}>
+      <View>
         <FlatList
           data={Brosure}
           removeClippedSubviews

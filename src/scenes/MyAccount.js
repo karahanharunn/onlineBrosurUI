@@ -1,5 +1,7 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   About,
   Facebook,
@@ -9,17 +11,33 @@ import {
   Right,
   Twitter,
 } from '../components/icons';
+import setToken from '../redux/actions/action';
 import {GRAY_DARK, SEARCH_TEXT} from '../styles/colors';
 
 export default function MyAccount({navigation}) {
+  const dispatch = useDispatch();
+  const resetToken = () => {
+    dispatch(setToken(null));
+    AsyncStorage.removeItem('token');
+  };
+  const userToken = useSelector((state) => state.userToken);
   return (
     <View style={{flex: 1}}>
       <Title title="Hesabım" />
-      <Info
-        onPress={() => navigation.navigate('Auth')}
-        title={'Giriş Yap'}
-        icon={<Login width={20} height={20} fill="black" />}
-      />
+      {!userToken && (
+        <Info
+          onPress={() => navigation.navigate('Auth')}
+          title={'Giriş Yap'}
+          icon={<Login width={20} height={20} fill="black" />}
+        />
+      )}
+      {userToken && (
+        <Info
+          onPress={() => resetToken()}
+          title={'Çıkış Yap'}
+          icon={<Login width={20} height={20} fill="black" />}
+        />
+      )}
       <Title title="Ayarlar" />
       <Info
         title={'Güncelleme'}

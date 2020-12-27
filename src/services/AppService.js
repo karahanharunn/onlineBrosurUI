@@ -45,7 +45,7 @@ async function brochureVisit(data) {
 }
 async function postFilter(data) {
   return instance.post(
-    config.authApiUrl + 'brochure/homepagebrochurefilter?filterKey=' + data,
+    config.authApiUrl + 'brochure/homepagebrochurefilter',
     data,
   );
 }
@@ -64,7 +64,6 @@ async function checkFavorites(data) {
   return instance.post(config.authApiUrl + 'favorite/checkfavorite', data);
 }
 async function createLogin(url) {
-  console.log(url);
   const response = await instance.get(
     config.authApiUrl + 'account/create' + url,
   );
