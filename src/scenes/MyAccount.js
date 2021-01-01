@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Linking} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   About,
@@ -13,7 +13,7 @@ import {
 } from '../components/icons';
 import setToken from '../redux/actions/action';
 import {GRAY_DARK, SEARCH_TEXT} from '../styles/colors';
-
+const username = 'trendbrosur';
 export default function MyAccount({navigation}) {
   const dispatch = useDispatch();
   const resetToken = () => {
@@ -21,6 +21,13 @@ export default function MyAccount({navigation}) {
     AsyncStorage.removeItem('token');
   };
   const userToken = useSelector((state) => state.userToken);
+  const openSocialMedia = async (url, platform) => {
+    const supported = await Linking.canOpenURL(url);
+
+    Linking.openURL(
+      supported ? url : `https://www.${platform}.com/${username}`,
+    );
+  };
   return (
     <View style={{flex: 1}}>
       <Title title="Hesabım" />
@@ -29,6 +36,7 @@ export default function MyAccount({navigation}) {
           onPress={() => navigation.navigate('Auth')}
           title={'Giriş Yap'}
           icon={<Login width={20} height={20} fill="black" />}
+          right={<Right width={12} height={12} fill={GRAY_DARK} />}
         />
       )}
       {userToken && (
@@ -36,6 +44,7 @@ export default function MyAccount({navigation}) {
           onPress={() => resetToken()}
           title={'Çıkış Yap'}
           icon={<Login width={20} height={20} fill="black" />}
+          right={<Right width={12} height={12} fill={GRAY_DARK} />}
         />
       )}
       <Title title="Ayarlar" />
@@ -49,22 +58,34 @@ export default function MyAccount({navigation}) {
       />
       <Title title="Sosyal Medya" />
       <Info
+        onPress={() =>
+          openSocialMedia('facebook://user?username=trendbrosur', 'facebook')
+        }
         title={'Facebook'}
         icon={<Facebook width={20} height={20} fill="black" />}
+        right={<Right width={12} height={12} fill={GRAY_DARK} />}
       />
       <Info
+        onPress={() =>
+          openSocialMedia('twitter://user?username=trendbrosur', 'twitter')
+        }
         title={'Twitter'}
         icon={<Twitter width={20} height={20} fill="black" />}
+        right={<Right width={12} height={12} fill={GRAY_DARK} />}
       />
       <Info
+        onPress={() =>
+          openSocialMedia('instagram://user?username=trendbrosur', 'instagram')
+        }
         title={'İnstagram'}
         icon={<Instagram width={20} height={20} fill="black" />}
+        right={<Right width={12} height={12} fill={GRAY_DARK} />}
       />
     </View>
   );
 }
 
-function Info({onPress, icon, title}) {
+function Info({onPress, icon, title, right}) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View
@@ -84,7 +105,7 @@ function Info({onPress, icon, title}) {
             flex: 1,
           }}>
           <Text style={{fontSize: 12, color: GRAY_DARK}}>{title}</Text>
-          <Right width={12} height={12} fill={GRAY_DARK} />
+          {right}
         </View>
       </View>
     </TouchableOpacity>

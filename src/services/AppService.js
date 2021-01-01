@@ -45,8 +45,7 @@ async function brochureVisit(data) {
 }
 async function postFilter(data) {
   return instance.post(
-    config.authApiUrl + 'brochure/homepagebrochurefilter',
-    data,
+    config.authApiUrl + 'brochure/homepagebrochurefilter?filterKey=' + data,
   );
 }
 async function addtofavorites(data) {

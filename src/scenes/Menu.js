@@ -85,7 +85,7 @@ export default function Menu({navigation}) {
           contentContainerStyle={{
             flexGrow: 1,
           }}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
         />
       </View>

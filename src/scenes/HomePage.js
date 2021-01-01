@@ -37,9 +37,13 @@ function HomePage(props) {
   }, []);
   useEffect(() => {
     if (!!key)
-      AppService.postFilter(key).then((response) => {
-        setBrosure(response.data.brochures);
-      });
+      AppService.postFilter(key)
+        .then((response) => {
+          setBrosure(response.data.brochures);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   }, [key]);
 
   useEffect(() => {
