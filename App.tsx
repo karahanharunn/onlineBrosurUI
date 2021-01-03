@@ -1,14 +1,14 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import 'react-native-gesture-handler';
 import SplashScreen from 'react-native-splash-screen';
-import {NavigationContainer} from '@react-navigation/native';
-import {Provider} from 'react-redux';
-import {createStore} from 'redux';
+import { NavigationContainer } from '@react-navigation/native';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 import rootReducer from './src/redux/reducers/reducer';
-import {enableScreens} from 'react-native-screens';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import { enableScreens } from 'react-native-screens';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Layout from './src/components/Layout';
-import {tokenService} from './src/services/TokenService';
+import { tokenService } from './src/services/TokenService';
 // Ignore log notification by message:
 enableScreens();
 const store = createStore(rootReducer);

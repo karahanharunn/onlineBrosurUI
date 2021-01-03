@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, useRef} from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -7,19 +7,20 @@ import {
   StatusBar,
   FlatList,
   TouchableWithoutFeedback,
+  Platform,
 } from 'react-native';
-import {SCALE_12, SCALE_10} from '../../styles/spacing';
+import { SCALE_12, SCALE_10 } from '../../styles/spacing';
 import Button from '../ButtonGroup/Button';
 import Column from '../column/Column';
 
 import Swiper from 'react-native-swiper';
 import Image from '../image/Image';
-import {GRAY_DARK, GRAY_LIGHT, SEARCH_BACKGROUND} from '../../styles/colors';
+import { GRAY_DARK, GRAY_LIGHT, SEARCH_BACKGROUND } from '../../styles/colors';
 import LoveButton from '../love/LoveButton';
 
 import Title from '../titles/Title';
 import TitleLight from '../titles/TitleLight';
-import {AppService} from '../../services/AppService';
+import { AppService } from '../../services/AppService';
 import ModalComponent from '../atoms/ModalComponent';
 import OpenUrlButton from '../atoms/OpenUrlButton';
 import {
@@ -31,31 +32,38 @@ import {
   Previous,
   Whatsapp,
 } from '../icons';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../header/Header';
 import Logo from '../Logo';
+import { Brosure } from '../../constant';
+
+interface BrandDetailProps {
+  navigation: any, route: any
+}
+
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const SLIDER_HEIGHT = Dimensions.get('window').height;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
 const ITEM_HEIGHT = Math.round((ITEM_WIDTH * 3) / 4);
 
-export default function BrandDetail({route, navigation: {goBack}}) {
-  const {item} = route.params;
+export default function BrandDetail({ route, navigation: { goBack } }: BrandDetailProps) {
+  const { item } = route.params;
 
   const [Brosure, setBrosure] = useState([]);
-  const [checkFavorite, setCheckFavorite] = useState([]);
+  const [checkFavorite, setCheckFavorite] = useState<boolean>();
   useEffect(() => {
     AppService.getDetail(item.id).then((response) => {
       response.data.length > 0
         ? setBrosure(
-            response.data.sort(function (a, b) {
-              return a.page - b.page;
-            }),
-          )
+          response.data.sort(function (a: any, b: any) {
+            return a.page - b.page;
+          }),
+        )
         : setBrosure(item.details);
     });
   }, [item.id]);
+  console.log(Brosure)
   useEffect(() => {
     const id = AppService.getDeviceİd();
     const body = {
@@ -84,10 +92,10 @@ export default function BrandDetail({route, navigation: {goBack}}) {
       return setCheckFavorite(false);
     }
   };
-  const renderPagination = (index, total, context) => (
-    <View style={[styles.paginationStyle, {top: -25}]}>
+  const renderPagination = () => (
+    <View style={[styles.paginationStyle, { top: -25 }]}>
       <Header>
-        <TouchableOpacity onPress={() => goBack()} style={{opacity: 1}}>
+        <TouchableOpacity onPress={() => goBack()} style={{ opacity: 1 }}>
           <Previous width={16} height={16} fill="black" />
         </TouchableOpacity>
       </Header>
@@ -95,7 +103,7 @@ export default function BrandDetail({route, navigation: {goBack}}) {
         <Text style={styles.date}>28 Eyl-01 Kas</Text>
         <Text style={styles.date}> {item.brandName + ' ' + item.name}</Text>
       </View>
-      <View style={{position: 'absolute', top: 5, right: 10}}>
+      <View style={{ position: 'absolute', top: 5, right: 10 }}>
         <TouchableOpacity onPress={changeFavorites}>
           <LoveButton active={checkFavorite} />
         </TouchableOpacity>
@@ -104,20 +112,23 @@ export default function BrandDetail({route, navigation: {goBack}}) {
   );
   return <Detail renderPagination={renderPagination} Brosure={Brosure} />;
 }
+interface DetailProps {
+  Brosure: any,
+  renderPagination: () => React.ReactNode
+}
 
 const Detail = React.memo(function ({
   Brosure,
-
   renderPagination,
-}) {
-  const swiperScroll = useRef();
+}: DetailProps) {
+  const swiperScroll = useRef<any>();
   const [visible, setVisible] = useState(false);
   const [description, setDescription] = useState(false);
   const [share, setShare] = useState(false);
   const [search, setSearch] = useState(false);
-  const [ActiveBrosur, setActiveBrosur] = useState();
+  const [ActiveBrosur, setActiveBrosur] = useState<Number>();
   //Animation
-  const setShow = useCallback(() => {
+  const setShow = useCallback((): void => {
     setVisible(false);
     setDescription(false);
     setSearch(false);
@@ -127,16 +138,12 @@ const Detail = React.memo(function ({
     setDescription(true);
     setVisible(true);
   }, [description]);
-  const showShare = useCallback(() => {
-    setShare(true);
-    setVisible(true);
-  }, [share]);
   const showSearch = useCallback(() => {
     setVisible(true);
     setSearch(true);
   }, [search]);
   useEffect(() => {
-    swiperScroll.current.scrollTo(ActiveBrosur);
+    swiperScroll?.current?.scrollTo(ActiveBrosur);
   }, [ActiveBrosur]);
   return (
     <View
@@ -155,10 +162,10 @@ const Detail = React.memo(function ({
           ref={swiperScroll}
           renderPagination={renderPagination}
           showsButtons
-          loop={true}>
+          loop={false}>
           {Brosure?.map((item, index) => (
             <View key={item.imageUrl}>
-              <TouchableWithoutFeedback onPress={() => setShow(false)}>
+              <TouchableWithoutFeedback onPress={() => setShow()}>
                 <Image
                   style={{
                     width: SLIDER_WIDTH,
@@ -189,7 +196,7 @@ const Detail = React.memo(function ({
           paddingHorizontal: 25,
         }}>
         <Logo />
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity
             key="Search"
             style={{
@@ -210,32 +217,34 @@ const Detail = React.memo(function ({
         visible={visible}
         height={270}>
         <Column>
-          <Description visible={description} />
           <BrosureList
             changeActiveBrosur={setActiveBrosur}
             visible={search}
             Brosure={Brosure}
-            ActiveBrosur={ActiveBrosur}
+            ActiveBrosur={Number(ActiveBrosur)}
           />
         </Column>
       </ModalComponent>
     </View>
   );
 });
-function BrosureList({visible, Brosure, changeActiveBrosur, ActiveBrosur}) {
-  const flatlistRef = useRef();
+interface BrosureListProps {
+  visible: boolean, Brosure: Brosure[], changeActiveBrosur: (id: Number) => void, ActiveBrosur: Number
+}
+function BrosureList({ visible, Brosure, changeActiveBrosur, ActiveBrosur }: BrosureListProps) {
+  const flatlistRef = useRef<any>();
   useEffect(() => {
     if (ActiveBrosur)
-      flatlistRef.current.scrollToIndex({
+      flatlistRef?.current?.scrollToIndex({
         animated: true,
-        index: ActiveBrosur - 1,
+        index: Number(ActiveBrosur) - 1,
       });
   }, [ActiveBrosur]);
   if (visible === false) return <View />;
-  const renderItem = (item) => {
+  const renderItem = (item: { item: { page: Number; imageUrl: String; }; }) => {
     return (
-      <View style={{display: 'flex', alignItems: 'center'}}>
-        <Text style={{color: 'white', fontSize: 10}}>{item.item.page}</Text>
+      <View style={{ display: 'flex', alignItems: 'center' }}>
+        <Text style={{ color: 'white', fontSize: 10 }}>{item.item.page}</Text>
         <TouchableOpacity onPress={() => changeActiveBrosur(item.item.page)}>
           <Image
             style={{
@@ -245,7 +254,7 @@ function BrosureList({visible, Brosure, changeActiveBrosur, ActiveBrosur}) {
               marginTop: 0,
               backgroundColor: 'transparent',
             }}
-            url={item.item.imageUrl}
+            url={`${item.item.imageUrl}`}
           />
         </TouchableOpacity>
       </View>
@@ -267,7 +276,7 @@ function BrosureList({visible, Brosure, changeActiveBrosur, ActiveBrosur}) {
         contentContainerStyle={{
           flexGrow: 1,
         }}
-        keyExtractor={(item) => item.page}
+        keyExtractor={(item) => `${item.page}`}
         renderItem={renderItem}
         ref={flatlistRef}
       />
@@ -275,7 +284,7 @@ function BrosureList({visible, Brosure, changeActiveBrosur, ActiveBrosur}) {
   );
 }
 
-function Description({visible}) {
+function Description({ visible }: { visible: Boolean }) {
   if (visible === false) return <View />;
   return (
     <View
@@ -287,7 +296,7 @@ function Description({visible}) {
         backgroundColor: 'white',
         width: SLIDER_WIDTH,
       }}>
-      <Title style={{paddingLeft: 32}}>Description</Title>
+      <Title style={{ paddingLeft: 32 }}>Description</Title>
       <View
         style={{
           paddingLeft: 32,
@@ -308,17 +317,17 @@ function Description({visible}) {
           marginBottom: 12,
           marginLeft: 6,
         }}>
-        <Button style={[styles.button, {flex: 1}]}>Kaydet</Button>
+        <Button style={[styles.button, { flex: 1 }]}>Kaydet</Button>
       </View>
     </View>
   );
 }
-function ShareComponent({visible}) {
+function ShareComponent({ visible }: { visible: Boolean }) {
   const text = 'Deneme';
 
   if (visible === false) return <View />;
   return (
-    <View style={{flex: 1, height: 50}}>
+    <View style={{ flex: 1, height: 50 }}>
       <View
         style={{
           paddingLeft: 12,
@@ -328,15 +337,15 @@ function ShareComponent({visible}) {
           flexDirection: 'row',
           justifyContent: 'space-evenly',
         }}>
-        <TitleLight style={{color: 'white'}}> Broşürü Paylaş</TitleLight>
-        <View style={{flexDirection: 'row'}}>
-          <OpenUrlButton url={`whatsapp://send?text=${text}`}>
+        <TitleLight style={{ color: 'white' }}> Broşürü Paylaş</TitleLight>
+        <View style={{ flexDirection: 'row' }}>
+          <OpenUrlButton title='' url={`whatsapp://send?text=${text}`}>
             <Whatsapp width={32} height={32} />
           </OpenUrlButton>
-          <OpenUrlButton url={`whatsapp://send?text=${text}`}>
+          <OpenUrlButton title='' url={`whatsapp://send?text=${text}`}>
             <Facebook width={32} height={32} />
           </OpenUrlButton>
-          <OpenUrlButton url={`whatsapp://send?text=${text}`}>
+          <OpenUrlButton title='' url={`whatsapp://send?text=${text}`}>
             <Instagram width={32} height={32} />
           </OpenUrlButton>
         </View>
@@ -390,7 +399,6 @@ const styles = StyleSheet.create({
     color: '#9B8ACA',
     fontSize: 12,
     backgroundColor: 'transparent',
-    backgroundColor: 'white',
     padding: 4,
   },
   container: {
@@ -418,12 +426,8 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   imageContainer: {
-    marginBottom: Platform.select({ios: 0, android: 1}), // Prevent a random Android rendering issue
+    marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
     borderRadius: 8,
   },
-  image: {
-    ...StyleSheet.absoluteFillObject,
-    resizeMode: 'contain',
-    backgroundColor: '#F3E7DD',
-  },
+
 });

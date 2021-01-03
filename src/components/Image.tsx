@@ -1,11 +1,11 @@
 import React from 'react';
-import {View, FlatList, Text, StyleSheet, Dimensions} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { View, FlatList, Text, StyleSheet, Dimensions } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Image from './image/Image';
 import LoveButton from './love/LoveButton';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const Item = ({item, index, navigation}) => (
+const Item = ({ item, index, navigation }) => (
   <View
     key={item.brandName}
     style={{
@@ -59,17 +59,17 @@ const Item = ({item, index, navigation}) => (
             display: 'flex',
             justifyContent: 'center',
           }}>
-          <TextComponent style={{color: 'green'}}>
+          <TextComponent style={{ color: 'green' }}>
             {item.brandName}
           </TextComponent>
         </View>
         <TextComponent>{item.totalPage} Sayfa</TextComponent>
       </View>
-      <TextComponent index>{item.name} </TextComponent>
+      <TextComponent index>{item?.name} </TextComponent>
     </View>
   </View>
 );
-const TextComponent = ({index, children, ...rest}) => (
+const TextComponent = ({ index, children, ...rest }: { index: Number | undefined, children?: React.ReactNode }) => (
   <Text
     style={{
       fontSize: 12,
@@ -79,8 +79,8 @@ const TextComponent = ({index, children, ...rest}) => (
     {children}
   </Text>
 );
-export default function ImageComponent({data, navigation, ...rest}) {
-  const renderItem = ({item}) => {
+export default function ImageComponent({ data, navigation, ...rest }) {
+  const renderItem = ({ item }) => {
     return <Item item={item} navigation={navigation} />;
   };
 
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#C1C0C3',
   },
-  end: {fontSize: 12, color: '#C1C0C3'},
+  end: { fontSize: 12, color: '#C1C0C3' },
   start: {
     fontSize: 16,
     lineHeight: 20,

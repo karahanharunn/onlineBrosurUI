@@ -1,58 +1,41 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, FlatList, Dimensions} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
 import Card from '../components/Card';
 import ButtonGroup from '../components/ButtonGroup/ButtonGroup';
-import {AppService} from '../services/AppService';
-import {SEARCH_LOCATION} from '../styles/colors';
+import { AppService, fetcher, fetcherPost } from '../services/AppService';
+import { SEARCH_LOCATION } from '../styles/colors';
 
 import Index from '../components/icons';
 import FlexRow from '../components/FlexRow/FlexRow';
 import ImageComponent from '../components/Image';
-import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import {Button} from '../components/ButtonGroup/ButtonGroup';
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Button } from '../components/ButtonGroup/ButtonGroup';
 import useSelect from '../hooks/useSelect';
 import StatusBar from '../components/atoms/StatusBar';
 import Logo from '../components/Logo';
+import useSWR from 'swr';
 
 const width = Dimensions.get('window').width;
 const HomeStack = createSharedElementStackNavigator();
 function HomePage(props) {
-  const [data, setData] = useState();
-  const [brosure, setBrosure] = useState();
   const [brandId, setBrandId] = useState();
-  const [filters, setFilters] = useState();
   const [selected, changeValue, key] = useSelect();
+
+  const { data: HomePageBrosure, error } = useSWR('brochure/homepagebrochure', fetcher)
+  const { data: Brands } = useSWR('brand/list', fetcher)
+  const { data: BrandBrosure } = useSWR(() => !!brandId ? `brand/getbrochurebybrandId?brandId=${brandId}` : null, fetcher)
+  const { data: FilterBrosure } = useSWR(() => !!key ? `brochure/homepagebrochurefilter?filterKey=${key}` : null, fetcherPost)
+  console.log(FilterBrosure)
   useEffect(() => {
-    (() => {
-      AppService.getBrosure().then((response) => {
-        setBrosure(response.data.brochures);
-        setFilters(response.data.filters);
-      });
-      AppService.getBrands().then((response) => {
-        setData(response.data);
-      });
-    })();
-  }, []);
-  useEffect(() => {
-    if (!!key)
-      AppService.postFilter(key)
-        .then((response) => {
-          setBrosure(response.data.brochures);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-  }, [key]);
+    if (!!BrandBrosure && BrandBrosure.length > 0) HomePageBrosure.brochures = BrandBrosure;
+  }, [BrandBrosure])
 
   useEffect(() => {
-    if (brandId > 0) {
-      AppService.getBrosureWithBrandId(brandId).then((response) => {
-        response.data.length > 0 && setBrosure(response.data);
-      });
-    }
-  }, [brandId]);
+    if (!!FilterBrosure?.brochures && FilterBrosure?.brochures.length > 0) HomePageBrosure.brochures = FilterBrosure?.brochures;
+  }, [FilterBrosure])
+
   const changeBrandId = (id) => setBrandId(id);
   return (
     <View
@@ -124,11 +107,11 @@ function HomePage(props) {
       </FlexRow>
       <VirtualizedView>
         <View style={[styles.listView, styles.marka]}>
-          <Card setBrandId={changeBrandId} data={data} {...props} />
+          <Card setBrandId={changeBrandId} data={Brands} {...props} />
           <ButtonGroup>
-            {filters?.map((item) => (
+            {HomePageBrosure?.filters?.map((item) => (
               <Button
-                key={item.key}
+                key={`${item.key}`}
                 changeValue={() => changeValue(item)}
                 selected={selected}
                 title={item.name}
@@ -136,13 +119,13 @@ function HomePage(props) {
             ))}
           </ButtonGroup>
         </View>
-        <ImageComponent numColumns={2} {...props} data={brosure} />
+        <ImageComponent numColumns={2} {...props} data={HomePageBrosure?.brochures} />
       </VirtualizedView>
     </View>
   );
 }
 
-export default function HomeStackScreen({navigation}) {
+export default function HomeStackScreen() {
   return (
     <HomeStack.Navigator
       initialRouteName="Anasayfa"

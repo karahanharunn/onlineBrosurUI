@@ -1,7 +1,15 @@
-import React, {useRef} from 'react';
-import {View, Animated, StyleSheet, TouchableOpacity} from 'react-native';
-import {GRAY_MEDIUM} from '../../styles/colors';
-import {Delete} from '../icons';
+import React, { useRef } from 'react';
+import { View, Animated, StyleSheet, TouchableOpacity } from 'react-native';
+import { GRAY_MEDIUM } from '../../styles/colors';
+import { Delete } from '../icons';
+interface ModalComponentProps {
+  modalVisible?: boolean,
+  children: React.ReactNode,
+  visible: boolean,
+  height: Number,
+  setShow: () => void,
+  setVisible: () => void,
+}
 export default function ModalComponent({
   modalVisible,
   children,
@@ -10,7 +18,7 @@ export default function ModalComponent({
   setShow,
   setVisible,
   ...rest
-}) {
+}: ModalComponentProps) {
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
   React.useEffect(() => {
@@ -22,12 +30,12 @@ export default function ModalComponent({
   }, [visible]);
   const bottomPosition = fadeAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [height + 30, 0],
+    outputRange: [Number(height) + 30, 0],
   });
   return (
     <Animated.View
       style={{
-        transform: [{translateY: bottomPosition}],
+        transform: [{ translateY: bottomPosition }],
         ...styles.info,
       }}
       {...rest}>

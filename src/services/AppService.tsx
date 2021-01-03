@@ -1,6 +1,6 @@
 import Axios from 'axios';
-import {config} from './Config';
-import {tokenService} from './TokenService';
+import { config } from './Config';
+import { tokenService } from './TokenService';
 import DeviceInfo from 'react-native-device-info';
 
 export const AppService = {
@@ -26,6 +26,8 @@ function getDeviceİd() {
 function getDetail(id) {
   return instance.post(config.authApiUrl + 'brochure/detail', String(id));
 }
+export const fetcher = url => instance.get(config.authApiUrl + url).then(res => res.data)
+export const fetcherPost = url => instance.post(config.authApiUrl + url).then(res => res.data)
 async function getBrands() {
   return instance.get(config.authApiUrl + 'brand/list');
 }
@@ -93,7 +95,7 @@ instance.interceptors.response.use(
 );
 instance.interceptors.request.use(
   async (config) => {
-    accessToken = await tokenService.get();
+    const accessToken = await tokenService.get();
     if (accessToken) {
       config.headers['Authorization'] = accessToken;
     }

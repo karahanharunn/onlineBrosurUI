@@ -3,7 +3,11 @@ import Menu from './scenes/Menu';
 import List from './scenes/List';
 import MyAccount from './scenes/MyAccount';
 import HomeTabsScreen from './scenes/HomePage';
-
+export type Brosure = {
+  page: Number,
+  imageUrl: String,
+  thumbImageUrl: String
+}
 export const tab = [
   {
     name: 'Anasayfa',
@@ -41,12 +45,12 @@ export const tab = [
   },
 ];
 export const Tabs = [
-  {name: 'Tüm Sonuçlar', id: 1, ref: React.createRef(), tab: 'all'},
+  { name: 'Tüm Sonuçlar', id: 1, ref: React.createRef(), tab: 'all' },
   {
     name: 'Markalar',
     tab: 'brands',
     id: 3,
     ref: React.createRef(),
   },
-  {name: 'Broşürler', tab: 'brochures', id: 2, ref: React.createRef()},
+  { name: 'Broşürler', tab: 'brochures', id: 2, ref: React.createRef() },
 ];
