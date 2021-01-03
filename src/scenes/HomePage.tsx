@@ -63,16 +63,7 @@ function HomePage(props) {
           <Profile />
         </FlexRow> */}
       <FlexRow
-        style={{
-          padding: 16,
-          marginTop: 8,
-          width,
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingTop: 0,
-        }}>
+      >
         <Logo />
         {/* <Search
             setSearchText={setSearchText}

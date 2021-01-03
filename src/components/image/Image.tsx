@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { config } from '../../services/Config';
 import { SharedElement } from 'react-navigation-shared-element';
-interface ImageProps {
+export interface ImageProps {
   url: string,
   children: React.ReactNode,
 }

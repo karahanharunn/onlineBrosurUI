@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import SvgLoveWithBack from '../icons/LoveWithBack';
 import SvgLove from '../icons/Love';
-interface LoveButtonProps {
+export interface LoveButtonProps {
   active: boolean | undefined,
   children?: React.ReactNode
 }

@@ -1,16 +1,18 @@
 import React from 'react';
-import {View} from 'react-native';
-
-const FlexRow = ({children, ...rest}) => {
+import { Dimensions, View } from 'react-native';
+const width = Dimensions.get('window').width;
+const FlexRow = ({ children, ...rest }) => {
   return (
     <View
       style={{
-        width: '100%',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingRight:20
+        padding: 16,
+        marginTop: 8,
+        width,
+        paddingTop: 0,
       }}
       {...rest}>
       {children}

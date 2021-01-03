@@ -37,7 +37,7 @@ import Header from '../header/Header';
 import Logo from '../Logo';
 import { Brosure } from '../../constant';
 
-interface BrandDetailProps {
+export interface BrandDetailProps {
   navigation: any, route: any
 }
 
@@ -112,7 +112,7 @@ export default function BrandDetail({ route, navigation: { goBack } }: BrandDeta
   );
   return <Detail renderPagination={renderPagination} Brosure={Brosure} />;
 }
-interface DetailProps {
+export interface DetailProps {
   Brosure: any,
   renderPagination: () => React.ReactNode
 }
@@ -206,9 +206,6 @@ const Detail = React.memo(function ({
             onPress={showSearch}>
             <Paging width={16} height={16} fill="black" />
           </TouchableOpacity>
-          <TouchableOpacity key="Open" onPress={showDescription}>
-            <Open width={16} height={16} color="black" />
-          </TouchableOpacity>
         </View>
       </View>
       <ModalComponent
@@ -228,7 +225,7 @@ const Detail = React.memo(function ({
     </View>
   );
 });
-interface BrosureListProps {
+export interface BrosureListProps {
   visible: boolean, Brosure: Brosure[], changeActiveBrosur: (id: Number) => void, ActiveBrosur: Number
 }
 function BrosureList({ visible, Brosure, changeActiveBrosur, ActiveBrosur }: BrosureListProps) {
@@ -339,13 +336,13 @@ function ShareComponent({ visible }: { visible: Boolean }) {
         }}>
         <TitleLight style={{ color: 'white' }}> Broşürü Paylaş</TitleLight>
         <View style={{ flexDirection: 'row' }}>
-          <OpenUrlButton title='' url={`whatsapp://send?text=${text}`}>
+          <OpenUrlButton url={`whatsapp://send?text=${text}`}>
             <Whatsapp width={32} height={32} />
           </OpenUrlButton>
-          <OpenUrlButton title='' url={`whatsapp://send?text=${text}`}>
+          <OpenUrlButton url={`whatsapp://send?text=${text}`}>
             <Facebook width={32} height={32} />
           </OpenUrlButton>
-          <OpenUrlButton title='' url={`whatsapp://send?text=${text}`}>
+          <OpenUrlButton url={`whatsapp://send?text=${text}`}>
             <Instagram width={32} height={32} />
           </OpenUrlButton>
         </View>

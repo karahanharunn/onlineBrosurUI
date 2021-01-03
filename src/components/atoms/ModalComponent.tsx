@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { View, Animated, StyleSheet, TouchableOpacity } from 'react-native';
 import { GRAY_MEDIUM } from '../../styles/colors';
 import { Delete } from '../icons';
-interface ModalComponentProps {
+export interface ModalComponentProps {
   modalVisible?: boolean,
   children: React.ReactNode,
   visible: boolean,

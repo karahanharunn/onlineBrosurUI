@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, TouchableOpacity} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import Image from '../components/image/Image';
 
-import {AppService} from '../services/AppService';
-import {GRAY_MEDIUM} from '../styles/colors';
+import { AppService } from '../services/AppService';
+import { GRAY_MEDIUM } from '../styles/colors';
+import { Info } from './List';
 
-export default function Menu({navigation}) {
+export default function Menu({ navigation }) {
   const [Brosure, setBrosure] = useState();
-
+  console.log(Brosure, Brosure.length)
   React.useEffect(() => {
     const id = AppService.getDeviceİd();
 
@@ -22,7 +23,7 @@ export default function Menu({navigation}) {
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [navigation]);
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() =>
@@ -36,7 +37,6 @@ export default function Menu({navigation}) {
             backgroundColor: 'white',
             flex: 1,
             flexDirection: 'row',
-            padding: 5,
             paddingVertical: 10,
             marginVertical: 5,
             shadowColor: '#000',
@@ -49,16 +49,16 @@ export default function Menu({navigation}) {
 
             elevation: 1,
           }}>
-          <View style={{width: 120}}>
-            <Image url={item.coverImageUrl} style={{width: 140, height: 90}} />
+          <View style={{ width: 120 }}>
+            <Image url={item.coverImageUrl} style={{ width: 140, height: 110 }} />
           </View>
-          <View style={{justifyContent: 'space-between', paddingVertical: 5}}>
+          <View style={{ justifyContent: 'space-between' }}>
             <View>
               <Text>{item.brandName}</Text>
-              <Text>{item.name}</Text>
+              <Text style={{ color: '#9B8ACA', fontSize: 12 }}>{item.name}</Text>
             </View>
-            <Text style={{fontSize: 10, color: GRAY_MEDIUM}}>
-              Broşürün detaylarına gitmek için tıklayın
+            <Text style={{ fontSize: 10, color: GRAY_MEDIUM }}>
+              Broşürün detayına gitmek için tıklayın
             </Text>
           </View>
         </View>
@@ -71,24 +71,29 @@ export default function Menu({navigation}) {
         flex: 1,
         overflow: 'scroll',
       }}>
-      <View style={{padding: 15}}>
-        <Text style={{fontSize: 12}}>
-          Favori Broşürlerinizi Bu Sekme Altında Görüntüleyebilirsiniz.
+      <View style={{ paddingHorizontal: 20, paddingVertical: 10, marginBottom: 10, backgroundColor: '#9B8ACA' }}>
+        <Text style={{ fontSize: 13, color: 'white' }}>
+          Favori Broşürler
         </Text>
       </View>
-      <View>
-        <FlatList
-          data={Brosure}
-          removeClippedSubviews
-          showsVerticalScrollIndicator={false}
-          nestedScrollEnabled={false}
-          contentContainerStyle={{
-            flexGrow: 1,
-          }}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-        />
-      </View>
+      {Brosure?.length > 0 ?
+        <View>
+          <FlatList
+            data={Brosure}
+            removeClippedSubviews
+            showsVerticalScrollIndicator={false}
+            nestedScrollEnabled={false}
+            contentContainerStyle={{
+              flexGrow: 1,
+            }}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderItem}
+          />
+        </View> :
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Info title="Favorilere aldığınız herhangibir broşürünüz bulunmuyor" />
+        </View>
+      }
     </View>
   );
 }
