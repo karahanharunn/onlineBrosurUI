@@ -1,15 +1,17 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import 'react-native-gesture-handler';
 import SplashScreen from 'react-native-splash-screen';
-import { NavigationContainer } from '@react-navigation/native';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import {NavigationContainer} from '@react-navigation/native';
+import {Provider} from 'react-redux';
+import {createStore} from 'redux';
 import rootReducer from './src/redux/reducers/reducer';
-import { enableScreens } from 'react-native-screens';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {enableScreens} from 'react-native-screens';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Layout from './src/components/Layout';
-import { tokenService } from './src/services/TokenService';
-// Ignore log notification by message:
+import {tokenService} from './src/services/TokenService';
+import { cache } from "swr"
+
+
 enableScreens();
 const store = createStore(rootReducer);
 const App = (props) => {
@@ -41,6 +43,7 @@ const App = (props) => {
     const value = 'Basic ' + encodeBase64(`consumer:RB,z6n}qvuJirM84`);
     tokenService.set(value);
     SplashScreen.hide();
+    cache.clear()
   }, []);
   return (
     <SafeAreaProvider>

@@ -1,5 +1,5 @@
 {
     "name": "ProjectBrosur",
-    "authApiUrl": "http://52.201.170.90:2777/api/",
-    "apiUrl":"http://52.201.170.90:2777/"
+    "authApiUrl": "http://3.239.82.68:2777/api/",
+    "apiUrl": "http://3.239.82.68:2777/"
 }
