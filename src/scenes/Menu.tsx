@@ -8,7 +8,6 @@ import { Info } from './List';
 
 export default function Menu({ navigation }) {
   const [Brosure, setBrosure] = useState();
-  console.log(Brosure, Brosure.length)
   React.useEffect(() => {
     const id = AppService.getDeviceİd();
 

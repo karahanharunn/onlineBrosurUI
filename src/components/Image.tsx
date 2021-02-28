@@ -1,18 +1,17 @@
 import React from 'react';
-import { View, FlatList, Text, StyleSheet, Dimensions } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {View, FlatList, Text, StyleSheet, Dimensions} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import Image from './image/Image';
 import LoveButton from './love/LoveButton';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const Item = ({ item, index, navigation }) => (
+const Item = ({item, index, navigation}) => (
   <View
     key={item.brandName}
     style={{
       borderColor: '#EFEFF0',
       borderWidth: 1,
-      marginVertical: 11,
-      marginHorizontal: 11,
+      margin: 11,
     }}>
     <TouchableOpacity
       style={styles.button}
@@ -31,45 +30,28 @@ const Item = ({ item, index, navigation }) => (
         url={item.coverImageUrl}
       />
     </TouchableOpacity>
+
     <View
       style={{
-        height: 60,
-        marginHorizontal: 12,
-        marginTop: 9,
-        paddingTop: 6,
-        borderTopWidth: 1,
-        borderColor: '#EFEFF0',
         display: 'flex',
-        justifyContent: 'space-evenly',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
       }}>
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignContent: 'space-between',
-        }}>
-        <View
-          style={{
-            minWidth: 70,
-            paddingHorizontal: 6,
-            height: 22,
-            borderRadius: 10,
-            opacity: index / 2 === 0 ? 0.5 : 0.8,
-            display: 'flex',
-            justifyContent: 'center',
-          }}>
-          <TextComponent style={{ color: 'green' }}>
-            {item.brandName}
-          </TextComponent>
-        </View>
-        <TextComponent>{item.totalPage} Sayfa</TextComponent>
-      </View>
-      <TextComponent index>{item?.name} </TextComponent>
+      <TextComponent style={{color: 'green'}}>{item.brandName}</TextComponent>
+      <TextComponent>{item.totalPage} Sayfa</TextComponent>
+    </View>
+    <View style={{paddingHorizontal: 10, paddingBottom: 5}}>
+      <TextComponent index={index}>{item?.name} </TextComponent>
     </View>
   </View>
 );
-const TextComponent = ({ index, children, ...rest }: { index: Number | undefined, children?: React.ReactNode }) => (
+interface TextComponentProps {
+  index?: any;
+  children?: React.ReactNode;
+}
+const TextComponent = ({index, children, ...rest}: TextComponentProps) => (
   <Text
     style={{
       fontSize: 12,
@@ -79,9 +61,13 @@ const TextComponent = ({ index, children, ...rest }: { index: Number | undefined
     {children}
   </Text>
 );
-export default function ImageComponent({ data, navigation, ...rest }) {
-  const renderItem = ({ item }) => {
-    return <Item item={item} navigation={navigation} />;
+export default function ImageComponent({data, navigation, ...rest}) {
+  const renderItem = ({item}) => {
+    return (
+      <View style={{width: windowWidth / 2}}>
+        <Item item={item} navigation={navigation} />
+      </View>
+    );
   };
 
   return (
@@ -114,7 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#C1C0C3',
   },
-  end: { fontSize: 12, color: '#C1C0C3' },
+  end: {fontSize: 12, color: '#C1C0C3'},
   start: {
     fontSize: 16,
     lineHeight: 20,
