@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, FlatList, Dimensions} from 'react-native';
 
 import Card from '../components/Card';
 import ButtonGroup from '../components/ButtonGroup/ButtonGroup';
-import { AppService, fetcher, fetcherPost } from '../services/AppService';
-import { SEARCH_LOCATION } from '../styles/colors';
+import {AppService, fetcher, fetcherPost} from '../services/AppService';
+import {SEARCH_LOCATION} from '../styles/colors';
 
 import Index from '../components/icons';
 import FlexRow from '../components/FlexRow/FlexRow';
 import ImageComponent from '../components/Image';
-import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Button } from '../components/ButtonGroup/ButtonGroup';
+import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Button} from '../components/ButtonGroup/ButtonGroup';
 import useSelect from '../hooks/useSelect';
 import StatusBar from '../components/atoms/StatusBar';
 import Logo from '../components/Logo';
@@ -19,22 +19,39 @@ import useSWR from 'swr';
 
 const width = Dimensions.get('window').width;
 const HomeStack = createSharedElementStackNavigator();
+const parameters = {
+  revalidateOnMount: true,
+};
+
 function HomePage(props) {
   const [brandId, setBrandId] = useState();
   const [selected, changeValue, key] = useSelect();
 
-  const { data: HomePageBrosure, error } = useSWR('brochure/homepagebrochure', fetcher)
-  const { data: Brands } = useSWR('brand/list', fetcher)
-  const { data: BrandBrosure } = useSWR(() => !!brandId ? `brand/getbrochurebybrandId?brandId=${brandId}` : null, fetcher)
-  const { data: FilterBrosure } = useSWR(() => !!key ? `brochure/homepagebrochurefilter?filterKey=${key}` : null, fetcherPost)
-  console.log(FilterBrosure)
+  const {data: HomePageBrosure, error} = useSWR(
+    'brochure/homepagebrochure',
+    fetcher,
+    parameters,
+  );
+  console.log('brosure', HomePageBrosure);
+  const {data: Brands} = useSWR('brand/list', fetcher, parameters);
+  const {data: BrandBrosure} = useSWR(
+    () => (!!brandId ? `brand/getbrochurebybrandId?brandId=${brandId}` : null),
+    fetcher,
+    parameters,
+  );
+  const {data: FilterBrosure} = useSWR(
+    () => (!!key ? `brochure/homepagebrochurefilter?filterKey=${key}` : null),
+    fetcherPost,
+  );
   useEffect(() => {
-    if (!!BrandBrosure && BrandBrosure.length > 0) HomePageBrosure.brochures = BrandBrosure;
-  }, [BrandBrosure])
+    if (!!BrandBrosure && BrandBrosure.length > 0)
+      HomePageBrosure.brochures = BrandBrosure;
+  }, [BrandBrosure]);
 
   useEffect(() => {
-    if (!!FilterBrosure?.brochures && FilterBrosure?.brochures.length > 0) HomePageBrosure.brochures = FilterBrosure?.brochures;
-  }, [FilterBrosure])
+    if (!!FilterBrosure?.brochures && FilterBrosure?.brochures.length > 0)
+      HomePageBrosure.brochures = FilterBrosure?.brochures;
+  }, [FilterBrosure]);
 
   const changeBrandId = (id) => setBrandId(id);
   return (
@@ -62,8 +79,7 @@ function HomePage(props) {
           />
           <Profile />
         </FlexRow> */}
-      <FlexRow
-      >
+      <FlexRow>
         <Logo />
         {/* <Search
             setSearchText={setSearchText}
@@ -110,7 +126,11 @@ function HomePage(props) {
             ))}
           </ButtonGroup>
         </View>
-        <ImageComponent numColumns={2} {...props} data={HomePageBrosure?.brochures} />
+        <ImageComponent
+          numColumns={2}
+          {...props}
+          data={HomePageBrosure?.brochures}
+        />
       </VirtualizedView>
     </View>
   );
