@@ -9,8 +9,7 @@ import {enableScreens} from 'react-native-screens';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Layout from './src/components/Layout';
 import {tokenService} from './src/services/TokenService';
-import { cache } from "swr"
-
+import {cache} from 'swr';
 
 enableScreens();
 const store = createStore(rootReducer);
@@ -43,7 +42,7 @@ const App = (props) => {
     const value = 'Basic ' + encodeBase64(`consumer:RB,z6n}qvuJirM84`);
     tokenService.set(value);
     SplashScreen.hide();
-    cache.clear()
+    cache.clear();
   }, []);
   return (
     <SafeAreaProvider>
